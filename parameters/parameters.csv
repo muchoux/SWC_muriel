@@ -1,0 +1,26 @@
+parameter	definition	unity	value
+Hopt	global irradiation in optimum inclined plane (measured)	Kwh/m2*year	
+P	peak power	kWp	
+PR	performance ratio	%	
+rd	annual degredation rate	%	
+El	annual household electricity consumption	kWh/year	
+N	life cycle	years	
+SCI	self consumption index	%	
+PVI	initial investment cost of the PV system	USD	
+PVOM	anual operation and maintenance cost	USD	
+d	discount rate	%	
+pg	price at which electricity is sold to the grid	USD/kWh	
+ps	price at which electricity is self consumed	USD/kWh	
+rpg	annual escalation rate of pg	%	
+rps	annual escalation rate of ps	%	
+rom	annual escalation rate of opex	%	
+T	income tax rate	%	
+Nd	period of amortization of the investment for tax purposes	years	
+Xd	total depreciation allowance	% of PVi	
+Xl	part of PVi financed with loan	% of PVi	
+Xec	part of PVi financed with equity capital	% of PVi	
+Xis	part of PVi financed with subsidy or grant	% of PVi	
+il	annual loan interest	%	
+Nis	amortization of investment subsidy	years	
+Nl	amortization of loan	years	
+dec	annual dividend of the equity capital or return on equity	%	
