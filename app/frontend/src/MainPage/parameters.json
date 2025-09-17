@@ -1,0 +1,252 @@
+{
+  "Cu": {
+    "definition": "initial investment by kWp",
+    "unity": "USD/kWp",
+    "arequipa_1": 2275.27,
+    "arequipa_2": 2667.67,
+    "tacna_1": 2275.27,
+    "tacna_2": 2667.67,
+    "lima_1": 2120.97,
+    "lima_2": 2486.37
+  },
+  "Hopt": {
+    "definition": "global irradiation in optimum inclined plane (measured)",
+    "unity": "Kwh/m2year",
+    "arequipa_1": 2220.0,
+    "arequipa_2": 2220.0,
+    "tacna_1": 1859.0,
+    "tacna_2": 1859.0,
+    "lima_1": 1477.0,
+    "lima_2": 1477.0
+  },
+  "P": {
+    "definition": "peak power",
+    "unity": "kWp",
+    "arequipa_1": 3.3,
+    "arequipa_2": 3.3,
+    "tacna_1": 3.3,
+    "tacna_2": 3.3,
+    "lima_1": 3.456,
+    "lima_2": 3.456
+  },
+  "PR": {
+    "definition": "performance ratio",
+    "unity": "%",
+    "arequipa_1": 85.5855855855856,
+    "arequipa_2": 85.5855855855856,
+    "tacna_1": 84.7767616998386,
+    "tacna_2": 84.7767616998386,
+    "lima_1": 88.2870683818551,
+    "lima_2": 88.2870683818551
+  },
+  "rd": {
+    "definition": "annual degredation rate",
+    "unity": "%",
+    "arequipa_1": 0.5,
+    "arequipa_2": 0.5,
+    "tacna_1": 0.5,
+    "tacna_2": 0.5,
+    "lima_1": 0.5,
+    "lima_2": 0.5
+  },
+  "El": {
+    "definition": "annual household electricity consumption",
+    "unity": "kWh/year",
+    "arequipa_1": 0.0,
+    "arequipa_2": 0.0,
+    "tacna_1": 0.0,
+    "tacna_2": 0.0,
+    "lima_1": 0.0,
+    "lima_2": 0.0
+  },
+  "N": {
+    "definition": "life cycle",
+    "unity": "years",
+    "arequipa_1": 25.0,
+    "arequipa_2": 25.0,
+    "tacna_1": 25.0,
+    "tacna_2": 25.0,
+    "lima_1": 25.0,
+    "lima_2": 25.0
+  },
+  "SCI": {
+    "definition": "self consumption index",
+    "unity": "%",
+    "arequipa_1": 100.0,
+    "arequipa_2": 100.0,
+    "tacna_1": 100.0,
+    "tacna_2": 100.0,
+    "lima_1": 100.0,
+    "lima_2": 100.0
+  },
+  "COM": {
+    "definition": "anual operation and maintenance cost",
+    "unity": "% of PVi",
+    "arequipa_1": 0.835065728462996,
+    "arequipa_2": 0.712232022701459,
+    "tacna_1": 0.835065728462996,
+    "tacna_2": 0.712232022701459,
+    "lima_1": 1.03726125310589,
+    "lima_2": 0.884824060779369
+  },
+  "d": {
+    "definition": "discount rate",
+    "unity": "%",
+    "arequipa_1": 12.0,
+    "arequipa_2": 9.72,
+    "tacna_1": 12.0,
+    "tacna_2": 9.72,
+    "lima_1": 12.0,
+    "lima_2": 9.72
+  },
+  "pg": {
+    "definition": "price at which electricity is sold to the grid",
+    "unity": "USD/kWh",
+    "arequipa_1": 0.0,
+    "arequipa_2": 0.0,
+    "tacna_1": 0.0,
+    "tacna_2": 0.0,
+    "lima_1": 0.0,
+    "lima_2": 0.0
+  },
+  "ps": {
+    "definition": "price at which electricity is self consumed",
+    "unity": "USD/kWh",
+    "arequipa_1": 0.1686,
+    "arequipa_2": 0.1686,
+    "tacna_1": 0.1716,
+    "tacna_2": 0.1716,
+    "lima_1": 0.1537,
+    "lima_2": 0.1537
+  },
+  "rpg": {
+    "definition": "annual escalation rate of pg",
+    "unity": "%",
+    "arequipa_1": 3.5,
+    "arequipa_2": 3.5,
+    "tacna_1": 3.5,
+    "tacna_2": 3.5,
+    "lima_1": 3.5,
+    "lima_2": 3.5
+  },
+  "rps": {
+    "definition": "annual escalation rate of ps",
+    "unity": "%",
+    "arequipa_1": 3.5,
+    "arequipa_2": 3.5,
+    "tacna_1": 3.5,
+    "tacna_2": 3.5,
+    "lima_1": 3.5,
+    "lima_2": 3.5
+  },
+  "rom": {
+    "definition": "annual escalation rate of opex",
+    "unity": "%",
+    "arequipa_1": 2.0,
+    "arequipa_2": 2.0,
+    "tacna_1": 2.0,
+    "tacna_2": 2.0,
+    "lima_1": 2.0,
+    "lima_2": 2.0
+  },
+  "T": {
+    "definition": "income tax rate",
+    "unity": "%",
+    "arequipa_1": 28.0,
+    "arequipa_2": 15.0,
+    "tacna_1": 28.0,
+    "tacna_2": 15.0,
+    "lima_1": 28.0,
+    "lima_2": 15.0
+  },
+  "Nd": {
+    "definition": "period of amortization of the investment for tax purposes",
+    "unity": "years",
+    "arequipa_1": 10.0,
+    "arequipa_2": 0.0,
+    "tacna_1": 10.0,
+    "tacna_2": 0.0,
+    "lima_1": 10.0,
+    "lima_2": 0.0
+  },
+  "Xd": {
+    "definition": "total depreciation allowance",
+    "unity": "% of PVi",
+    "arequipa_1": 100.0,
+    "arequipa_2": 0.0,
+    "tacna_1": 100.0,
+    "tacna_2": 0.0,
+    "lima_1": 100.0,
+    "lima_2": 0.0
+  },
+  "Xl": {
+    "definition": "part of PVi financed with loan",
+    "unity": "% of PVi",
+    "arequipa_1": 0.0,
+    "arequipa_2": 80.0,
+    "tacna_1": 0.0,
+    "tacna_2": 80.0,
+    "lima_1": 0.0,
+    "lima_2": 80.0
+  },
+  "Xec": {
+    "definition": "part of PVi financed with equity capital",
+    "unity": "% of PVi",
+    "arequipa_1": 100.0,
+    "arequipa_2": 20.0,
+    "tacna_1": 100.0,
+    "tacna_2": 20.0,
+    "lima_1": 100.0,
+    "lima_2": 20.0
+  },
+  "Xis": {
+    "definition": "part of PVi financed with subsidy or grant",
+    "unity": "% of PVi",
+    "arequipa_1": 0.0,
+    "arequipa_2": 0.0,
+    "tacna_1": 0.0,
+    "tacna_2": 0.0,
+    "lima_1": 0.0,
+    "lima_2": 0.0
+  },
+  "il": {
+    "definition": "annual loan interest",
+    "unity": "%",
+    "arequipa_1": 0.0,
+    "arequipa_2": 14.0,
+    "tacna_1": 0.0,
+    "tacna_2": 14.0,
+    "lima_1": 0.0,
+    "lima_2": 14.0
+  },
+  "Nis": {
+    "definition": "amortization of investment subsidy",
+    "unity": "years",
+    "arequipa_1": 0.0,
+    "arequipa_2": 0.0,
+    "tacna_1": 0.0,
+    "tacna_2": 0.0,
+    "lima_1": 0.0,
+    "lima_2": 0.0
+  },
+  "Nl": {
+    "definition": "amortization of loan",
+    "unity": "years",
+    "arequipa_1": 0.0,
+    "arequipa_2": 10.0,
+    "tacna_1": 0.0,
+    "tacna_2": 10.0,
+    "lima_1": 0.0,
+    "lima_2": 10.0
+  },
+  "dec": {
+    "definition": "annual dividend of the equity capital or return on equity",
+    "unity": "%",
+    "arequipa_1": 6.0,
+    "arequipa_2": 1.0,
+    "tacna_1": 6.0,
+    "tacna_2": 1.0,
+    "lima_1": 6.0,
+    "lima_2": 1.0
+  }
+}
