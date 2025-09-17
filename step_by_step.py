@@ -58,7 +58,7 @@ Nis = int(param_dict["Nis"])             # Duration of subsidy repayment (years)
 Nl = int(param_dict["Nl"])               # Loan amortization period (years)
 dec = float(param_dict["dec"]) / 100     # Annual return on equity (%/year)
 
-# --- Shared factors ---
+# --- Virtual parameters created to simplify equations (no physical or econonmical meaning) ---
 q = 1 / (1 + d)
 Kp = (1 + rom) / (1 + d)
 Ks = (1 + rps) * (1 - rd) / (1 + d)
