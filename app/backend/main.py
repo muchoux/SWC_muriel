@@ -27,7 +27,7 @@ def calculate(technical_parameters : TechnicalParameters,
               financial_parameters : FinancialParameters ) -> Results:
     
     
-    simulation_values = run_simulation(source = "talavera", d = economic_parameters.d/100,
+    simulation_values = run_simulation(source = "espinoza", d = economic_parameters.d/100,
                             rom=economic_parameters.rOM/100,
                             rps=economic_parameters.rps/100,
                             rd=technical_parameters.rd/100, 
