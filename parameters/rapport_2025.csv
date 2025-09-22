@@ -10,7 +10,7 @@ SCI;self consumption index;%;100;100;100;100;100;100;100;100;100;100
 COM;anual operation and maintenance cost;% of PVi;1.011316216;1.090434038;0.817078482;0.880713205;0.912877874;0.99179102;0.856469351;0.925856045;0.758035839;0.812809927
 d;discount rate;%;5;5;5;5;5;5;5;5;5;5
 pg;price at which electricity is sold to the grid;USD/kWh;0;0;0;0;0;0;0;0;0;0
-ps;price at which electricity is self consumed;USD/kWh;17.43342776;17.43342776;22.60339943;22.60339943;20.3286119;20.3286119;19.29461756;19.29461756;24.64305949;24.64305949
+ps;price at which electricity is self consumed;USD/kWh;0.1743;0.1743;0.226;0.226;0.2033;0.2033;0.1929;0.1929;0.2464;0.2464
 rpg;annual escalation rate of pg;%;1.97;1.97;1.97;1.97;1.97;1.97;1.97;1.97;1.97;1.97
 rps;annual escalation rate of ps;%;1.97;1.97;1.97;1.97;1.97;1.97;1.97;1.97;1.97;1.97
 rom;annual escalation rate of opex;%;1.97;1.97;1.97;1.97;1.97;1.97;1.97;1.97;1.97;1.97

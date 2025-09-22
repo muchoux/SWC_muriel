@@ -1,31 +1,31 @@
-parameter;definition;unity;lima_perc;lima_hit;chachapoyas_perc;chachapoyas_hit;tacna_perc;tacna_hit;arequipa_perc;arequipa_hit;juliaca_perc;juliaca_hit
-Cu;initial investment by kWp;USD/kWp;2509.57;2705.9;2683.46;2892.45;2552.62;2759.42;2382.92;2588.91;2907.64;3117.74
-Hopt;global irradiation in optimum inclined plane (measured);Kwh/m2year;1522;1522;1515;1515;2154;2154;2099;2099;2314;2314
-P;peak power;kWp;1.675;1.65;1.675;1.65;1.675;1.65;1.675;1.65;1.675;1.65
-PR;performance ratio;%;80;83;83;87;67;84;70;84;82;86
-rd;annual degredation rate;%;0.5;0.5;0.5;0.5;0.5;0.5;0.5;0.5;0.5;0.5
-El;annual household electricity consumption;kWh/year;0;0;0;0;0;0;0;0;0;0
-N;life cycle;years;25;25;25;25;25;25;25;25;25;25
-SCI;self consumption index;%;100;100;100;100;100;100;100;100;100;100
-COM;anual operation and maintenance cost;% of PVi;0.876644206;0.813038176;0.708041111;0.656882574;0.744333273;0.688550493;0.797341077;0.733899595;0.653450909;0.609415795
-d;discount rate;%;5;5;5;5;5;5;5;5;5;5
-pg;price at which electricity is sold to the grid;USD/kWh;0;0;0;0;0;0;0;0;0;0
-ps;price at which electricity is self consumed;USD/kWh;15.46910112;15.46910112;22.6741573;22.6741573;17.65168539;17.65168539;17.33707865;17.33707865;20.73314607;20.73314607
-rpg;annual escalation rate of pg;%;3.5;3.5;3.5;3.5;3.5;3.5;3.5;3.5;3.5;3.5
-rps;annual escalation rate of ps;%;3.5;3.5;3.5;3.5;3.5;3.5;3.5;3.5;3.5;3.5
-rom;annual escalation rate of opex;%;2;2;2;2;2;2;2;2;2;2
-T;income tax rate;%;0;0;0;0;0;0;0;0;0;0
-Nd;period of amortization of the investment for tax purposes;years;0;0;0;0;0;0;0;0;0;0
-Xd;total depreciation allowance;% of PVi;0;0;0;0;0;0;0;0;0;0
-Xl;part of PVi financed with loan;% of PVi;0;0;0;0;0;0;0;0;0;0
-Xec;part of PVi financed with equity capital;% of PVi;100;100;100;100;100;100;100;100;100;100
-Xis;part of PVi financed with subsidy or grant;% of PVi;0;0;0;0;0;0;0;0;0;0
-il;annual loan interest;%;0;0;0;0;0;0;0;0;0;0
-Nis;amortization of investment subsidy;years;0;0;0;0;0;0;0;0;0;0
-Nl;amortization of loan;years;0;0;0;0;0;0;0;0;0;0
-dec;annual dividend of the equity capital or return on equity;%;0;0;0;0;0;0;0;0;0;0
-;;;;;;;;;;;;
-;;;;;;;;;;;;
-;;;;;;;;;;;;
-;;;;;;;;;;;;
-;;;;;3.56;;;;;;;
+parameter;definition;unity;lima_perc;lima_hit;chachapoyas_perc;chachapoyas_hit;tacna_perc;tacna_hit;arequipa_perc;arequipa_hit;juliaca_perc;juliaca_hit;
+Cu;initial investment by kWp;USD/kWp;2509.57;2705.9;2683.46;2892.45;2552.62;2759.42;2382.92;2588.91;2907.64;3117.74;
+Hopt;global irradiation in optimum inclined plane (measured);Kwh/m2year;1522;1522;1515;1515;2154;2154;2099;2099;2314;2314;
+P;peak power;kWp;1.675;1.65;1.675;1.65;1.675;1.65;1.675;1.65;1.675;1.65;
+PR;performance ratio;%;80;83;83;87;67;84;70;84;82;86;
+rd;annual degredation rate;%;0.5;0.5;0.5;0.5;0.5;0.5;0.5;0.5;0.5;0.5;
+El;annual household electricity consumption;kWh/year;0;0;0;0;0;0;0;0;0;0;
+N;life cycle;years;25;25;25;25;25;25;25;25;25;25;
+SCI;self consumption index;%;100;100;100;100;100;100;100;100;100;100;
+COM;anual operation and maintenance cost;% of PVi;0.876644206;0.813038176;0.708041111;0.656882574;0.744333273;0.688550493;0.797341077;0.733899595;0.653450909;0.609415795;
+d;discount rate;%;5;5;5;5;5;5;5;5;5;5;
+pg;price at which electricity is sold to the grid;USD/kWh;0;0;0;0;0;0;0;0;0;0;
+ps;price at which electricity is self consumed;USD/kWh;0.1547;0.1547;0.2267;0.2267;0.1765;0.1765;0.1734;0.1734;0.2073;0.2073;
+rpg;annual escalation rate of pg;%;3.5;3.5;3.5;3.5;3.5;3.5;3.5;3.5;3.5;3.5;
+rps;annual escalation rate of ps;%;3.5;3.5;3.5;3.5;3.5;3.5;3.5;3.5;3.5;3.5;
+rom;annual escalation rate of opex;%;2;2;2;2;2;2;2;2;2;2;
+T;income tax rate;%;0;0;0;0;0;0;0;0;0;0;
+Nd;period of amortization of the investment for tax purposes;years;0;0;0;0;0;0;0;0;0;0;
+Xd;total depreciation allowance;% of PVi;0;0;0;0;0;0;0;0;0;0;
+Xl;part of PVi financed with loan;% of PVi;0;0;0;0;0;0;0;0;0;0;
+Xec;part of PVi financed with equity capital;% of PVi;100;100;100;100;100;100;100;100;100;100;
+Xis;part of PVi financed with subsidy or grant;% of PVi;0;0;0;0;0;0;0;0;0;0;
+il;annual loan interest;%;0;0;0;0;0;0;0;0;0;0;
+Nis;amortization of investment subsidy;years;0;0;0;0;0;0;0;0;0;0;
+Nl;amortization of loan;years;0;0;0;0;0;0;0;0;0;0;
+dec;annual dividend of the equity capital or return on equity;%;0;0;0;0;0;0;0;0;0;0;
+;;;;;;;;;;;;;
+;;;;;;;;;;;;;
+;;;;;;;;;;;;;
+;;;;;;;;;;;;;
+;;;;;3.56;;;;;;;;
