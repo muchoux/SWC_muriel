@@ -36,11 +36,12 @@ const scenarioCities = {
     arequipa: ["hit", "perc"],
     tacna: ["hit", "perc"],
     lima: ["hit", "perc"],
-    chachapapas: ["hit", "perc"],
+    chachapoyas: ["hit", "perc"],
     juliaca: ["hit", "perc"]
   }
 } as const;
 const years = ["Year","2020", "2025"];
+const models = ["talavera", "espinoza"];
 
 type Scenario = keyof typeof scenarioCities; // "espinoza" | "mater"
 //type City<S extends Scenario> = keyof typeof scenarioCities[S];
@@ -61,6 +62,7 @@ const MainPage: React.FC = () => {
   const [city, setCity] = useState<string>(""); 
   const [financingScheme, setFinancingScheme] = useState<string>("");
   const [year, setYear] = useState<string>("");
+  const [model, setModel] = useState<string>("");
 
 
   const handleChange = (
@@ -94,7 +96,7 @@ const MainPage: React.FC = () => {
           technical_parameters: params.technicalParams,
           economic_parameters: params.economicParams,
           financial_parameters: params.financialParams,
-          source : scenario
+          model : model
         }),
       });
 
@@ -143,6 +145,23 @@ const MainPage: React.FC = () => {
       </Section>
 
     <ControlsContainer>
+      <ControlSelect
+      name="Choose a model"
+      key='Select-model'
+      onChange={(e) => {
+        setModel(e.target.value);
+      }}
+      value={model}
+    >
+      <option value="" hidden>
+        Choose
+      </option>
+      {models.map((c) => (
+        <option key={c} value={c}>
+          {c}
+        </option>
+      ))}
+    </ControlSelect>
       <ControlSelect
       name="Choose a scenario"
       key='Select-Scenario'

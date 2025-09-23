@@ -35,7 +35,7 @@ class CalculateInput(BaseModel):
     technical_parameters : TechnicalParameters
     economic_parameters : EconomicParameters
     financial_parameters : FinancialParameters
-    source : str
+    model : str
     
 class Results(BaseModel):
     Result : dict

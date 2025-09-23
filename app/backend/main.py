@@ -30,7 +30,7 @@ def calculate(input_data : CalculateInput ) -> Results:
     
     print(input_data)
     
-    simulation_values = run_simulation(input_data.source , d = input_data.economic_parameters.d/100,
+    simulation_values = run_simulation(source = input_data.model , d = input_data.economic_parameters.d/100,
                             rom=input_data.economic_parameters.rOM/100,
                             rps=input_data.economic_parameters.rps/100,
                             rd=input_data.technical_parameters.rd/100, 
