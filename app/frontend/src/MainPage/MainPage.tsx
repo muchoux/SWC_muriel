@@ -87,7 +87,7 @@ const MainPage: React.FC = () => {
     setLoading(true);
 
     try {
-      const response = await fetch(`${API_URL}/calculate`, {
+      const response = await fetch(`${API_URL}calculate`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
@@ -214,9 +214,7 @@ const MainPage: React.FC = () => {
       ))}
     </ControlSelect>
     
-    };
-
-    
+    }
 
     <ControlButton type="button" disabled={city === "" || financingScheme === ""} onClick={() => setParametersValue()}>
       Fill data
