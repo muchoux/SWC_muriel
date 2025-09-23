@@ -2,251 +2,1825 @@
   "Cu": {
     "definition": "initial investment by kWp",
     "unity": "USD/kWp",
-    "arequipa_1": 2275.27,
-    "arequipa_2": 2667.67,
-    "tacna_1": 2275.27,
-    "tacna_2": 2667.67,
-    "lima_1": 2120.97,
-    "lima_2": 2486.37
+    "values" : {
+      "espinoza":{
+        "arequipa" : {
+          "leasing": 2667.67,
+          "owner_financed" : 2275.27
+        },
+        "tacna" : {
+          "leasing": 2275.27,
+          "owner_financed" : 2667.67
+        },
+        "lima" : {
+          "leasing": 2120.97,
+          "owner_financed" : 2486.37
+        }
+      },
+      "mater" : {
+        "lima" :{
+          "hit" : {
+            "2020" :2705.9,
+            "2025" : 1489
+          }, 
+          "perc" :{
+            "2020" : 2509.57,
+            "2025" : 1128.281398
+          }
+        },
+        "chachapoyas" :{
+          "hit" : {
+            "2020" : 2892.45,
+            "2025" : 1754
+
+          }, 
+          "perc" :{
+            "2020" : 2683.46,
+            "2025" : 1393.614731
+          }
+        },
+        "tacna" :{
+          "hit" : {
+            "2020" :2759.42,
+            "2025" : 1718
+          }, 
+          "perc" :{
+            "2020" : 2552.62,
+            "2025" : 1375.948064
+          }
+        },
+        "arequipa" :{
+          "hit" : {
+            "2020" : 2588.91,
+            "2025" : 1736
+
+          }, 
+          "perc" :{
+            "2020" : 2382.92,
+            "2025" : 1357.948064
+          }
+        },
+        "juliaca" :{
+          "hit" : {
+            "2020" : 3117.74,
+            "2025" : 1754
+
+          }, 
+          "perc" :{
+            "2020" : 2907.64,
+            "2025" : 1393.614731
+          }
+        }
+      }
+    }
   },
   "Hopt": {
     "definition": "global irradiation in optimum inclined plane (measured)",
     "unity": "Kwh/m2year",
-    "arequipa_1": 2220.0,
-    "arequipa_2": 2220.0,
-    "tacna_1": 1859.0,
-    "tacna_2": 1859.0,
-    "lima_1": 1477.0,
-    "lima_2": 1477.0
+    "values" : {
+      "espinoza":{
+        "arequipa" : {
+          "leasing": 2220.0,
+          "owner_financed" : 2220.0
+        },
+        "tacna" : {
+          "leasing": 1859.0,
+          "owner_financed" : 1859.0
+        },
+        "lima" : {
+          "leasing": 1477.0,
+          "owner_financed" : 1477.0
+        }
+      },
+      "mater" : {
+        "lima" :{
+          "hit" : {
+            "2020" :1522,
+            "2025" : 1522
+          }, 
+          "perc" :{
+            "2020" : 1522,
+            "2025" : 1522
+          }
+        },
+        "chachapoyas" :{
+          "hit" : {
+            "2020" : 1515,
+            "2025" : 1515
+
+          }, 
+          "perc" :{
+            "2020" : 1515,
+            "2025" : 1515
+          }
+        },
+        "tacna" :{
+          "hit" : {
+            "2020" :2154,
+            "2025" : 2154
+          }, 
+          "perc" :{
+            "2020" : 2154,
+            "2025" : 2154
+          }
+        },
+        "arequipa" :{
+          "hit" : {
+            "2020" : 2099,
+            "2025" : 2099
+
+          }, 
+          "perc" :{
+            "2020" : 2099,
+            "2025" : 2099
+          }
+        },
+        "juliaca" :{
+          "hit" : {
+            "2020" : 2314,
+            "2025" : 2314
+
+          }, 
+          "perc" :{
+            "2020" : 2314,
+            "2025" : 2314
+          }
+        }
+      }
+    }
   },
   "P": {
     "definition": "peak power",
     "unity": "kWp",
-    "arequipa_1": 3.3,
-    "arequipa_2": 3.3,
-    "tacna_1": 3.3,
-    "tacna_2": 3.3,
-    "lima_1": 3.456,
-    "lima_2": 3.456
+    "values" : {
+      "espinoza":{
+        "arequipa" : {
+          "leasing": 3.3,
+          "owner_financed" : 3.3
+        },
+        "tacna" : {
+          "leasing": 3.3,
+          "owner_financed" : 3.3
+        },
+        "lima" : {
+          "leasing": 3.456,
+          "owner_financed" : 3.456
+        }
+      },
+      "mater" : {
+        "lima" :{
+          "hit" : {
+            "2020" :1.65,
+            "2025" : 1.65
+          }, 
+          "perc" :{
+            "2020" : 1.675,
+            "2025" : 1.675
+          }
+        },
+        "chachapoyas" :{
+          "hit" : {
+            "2020" : 1.65,
+            "2025" : 1.65
+
+          }, 
+          "perc" :{
+            "2020" : 1.675	,
+            "2025" : 1.675
+          }
+        },
+        "tacna" :{
+          "hit" : {
+            "2020" :1.65,
+            "2025" : 1.65
+          }, 
+          "perc" :{
+            "2020" : 1.675,
+            "2025" : 1.675
+          }
+        },
+        "arequipa" :{
+          "hit" : {
+            "2020" : 1.65,
+            "2025" : 1.65
+
+          }, 
+          "perc" :{
+            "2020" : 1.675,
+            "2025" : 1.675
+          }
+        },
+        "juliaca" :{
+          "hit" : {
+            "2020" : 1.65,
+            "2025" : 1.65
+
+          }, 
+          "perc" :{
+            "2020" : 1.675,
+            "2025" : 1.675
+          }
+        }
+      }
+    }
   },
   "PR": {
     "definition": "performance ratio",
     "unity": "%",
-    "arequipa_1": 85.5855855855856,
-    "arequipa_2": 85.5855855855856,
-    "tacna_1": 84.7767616998386,
-    "tacna_2": 84.7767616998386,
-    "lima_1": 88.2870683818551,
-    "lima_2": 88.2870683818551
+    "values" : {
+      "espinoza":{
+        "arequipa" : {
+          "leasing": 85.5855855855856,
+          "owner_financed" : 85.5855855855856
+        },
+        "tacna" : {
+          "leasing": 84.7767616998386,
+          "owner_financed" : 84.7767616998386
+        },
+        "lima" : {
+          "leasing": 88.2870683818551,
+          "owner_financed" : 88.2870683818551
+        }
+      },
+      "mater" : {
+        "lima" :{
+          "hit" : {
+            "2020" :83,
+            "2025" : 83
+          }, 
+          "perc" :{
+            "2020" : 80,
+            "2025" : 80
+          }
+        },
+        "chachapoyas" :{
+          "hit" : {
+            "2020" : 87,
+            "2025" : 87
+
+          }, 
+          "perc" :{
+            "2020" : 83,
+            "2025" : 83
+          }
+        },
+        "tacna" :{
+          "hit" : {
+            "2020" :84,
+            "2025" : 84
+          }, 
+          "perc" :{
+            "2020" : 67,
+            "2025" : 67
+          }
+        },
+        "arequipa" :{
+          "hit" : {
+            "2020" : 84,
+            "2025" : 84
+
+          }, 
+          "perc" :{
+            "2020" : 70,
+            "2025" : 70
+          }
+        },
+        "juliaca" :{
+          "hit" : {
+            "2020" : 86,
+            "2025" : 86
+
+          }, 
+          "perc" :{
+            "2020" : 82,
+            "2025" : 82
+          }
+        }
+      }
+    }
   },
   "rd": {
     "definition": "annual degredation rate",
     "unity": "%",
-    "arequipa_1": 0.5,
-    "arequipa_2": 0.5,
-    "tacna_1": 0.5,
-    "tacna_2": 0.5,
-    "lima_1": 0.5,
-    "lima_2": 0.5
+    "values" : {
+      "espinoza":{
+        "arequipa" : {
+          "leasing": 0.5,
+          "owner_financed" :0.5
+        },
+        "tacna" : {
+          "leasing": 0.5,
+          "owner_financed" : 0.5
+        },
+        "lima" : {
+          "leasing": 0.5,
+          "owner_financed" : 0.5
+        }
+      },
+      "mater" : {
+        "lima" :{
+          "hit" : {
+            "2020" :0.5,
+            "2025" : 0.5
+          }, 
+          "perc" :{
+            "2020" : 0.5,
+            "2025" : 0.5
+          }
+        },
+        "chachapoyas" :{
+          "hit" : {
+            "2020" : 0.5,
+            "2025" : 0.5
+
+          }, 
+          "perc" :{
+            "2020" : 0.5,
+            "2025" : 0.5
+          }
+        },
+        "tacna" :{
+          "hit" : {
+            "2020" :0.5,
+            "2025" : 0.5
+          }, 
+          "perc" :{
+            "2020" : 0.5,
+            "2025" : 0.5
+          }
+        },
+        "arequipa" :{
+          "hit" : {
+            "2020" : 0.5,
+            "2025" : 0.5
+
+          }, 
+          "perc" :{
+            "2020" : 0.5,
+            "2025" : 0.5
+          }
+        },
+        "juliaca" :{
+          "hit" : {
+            "2020" : 0.5,
+            "2025" : 0.5
+
+          }, 
+          "perc" :{
+            "2020" : 0.5,
+            "2025" : 0.5
+          }
+        }
+      }
+    }
   },
   "El": {
     "definition": "annual household electricity consumption",
     "unity": "kWh/year",
-    "arequipa_1": 0.0,
-    "arequipa_2": 0.0,
-    "tacna_1": 0.0,
-    "tacna_2": 0.0,
-    "lima_1": 0.0,
-    "lima_2": 0.0
+    "values" : {
+      "espinoza":{
+        "arequipa" : {
+          "leasing": 0.0,
+          "owner_financed" :0.0
+        },
+        "tacna" : {
+          "leasing": 0.0,
+          "owner_financed" : 0.0
+        },
+        "lima" : {
+          "leasing": 0.0,
+          "owner_financed" : 0.0
+        }
+      },
+      "mater" : {
+        "lima" :{
+          "hit" : {
+            "2020" :0,
+            "2025" : 0
+          }, 
+          "perc" :{
+            "2020" : 0,
+            "2025" : 0
+          }
+        },
+        "chachapoyas" :{
+          "hit" : {
+            "2020" : 0,
+            "2025" : 0
+
+          }, 
+          "perc" :{
+            "2020" : 0,
+            "2025" : 0
+          }
+        },
+        "tacna" :{
+          "hit" : {
+            "2020" :0,
+            "2025" : 0
+          }, 
+          "perc" :{
+            "2020" : 0,
+            "2025" : 0
+          }
+        },
+        "arequipa" :{
+          "hit" : {
+            "2020" : 0,
+            "2025" : 0
+
+          }, 
+          "perc" :{
+            "2020" : 0,
+            "2025" : 0
+          }
+        },
+        "juliaca" :{
+          "hit" : {
+            "2020" : 0,
+            "2025" : 0
+
+          }, 
+          "perc" :{
+            "2020" : 0,
+            "2025" : 0
+          }
+        }
+      }
+    }
   },
   "N": {
     "definition": "life cycle",
     "unity": "years",
-    "arequipa_1": 25.0,
-    "arequipa_2": 25.0,
-    "tacna_1": 25.0,
-    "tacna_2": 25.0,
-    "lima_1": 25.0,
-    "lima_2": 25.0
+    "values" : {
+      "espinoza":{
+        "arequipa" : {
+          "leasing": 25,
+          "owner_financed" :25
+        },
+        "tacna" : {
+          "leasing": 25,
+          "owner_financed" : 25
+        },
+        "lima" : {
+          "leasing": 25,
+          "owner_financed" : 25
+        }
+      },
+      "mater" : {
+        "lima" :{
+          "hit" : {
+            "2020" :25,
+            "2025" : 25
+          }, 
+          "perc" :{
+            "2020" : 25,
+            "2025" : 25
+          }
+        },
+        "chachapoyas" :{
+          "hit" : {
+            "2020" : 25,
+            "2025" : 25
+
+          }, 
+          "perc" :{
+            "2020" : 25,
+            "2025" : 25
+          }
+        },
+        "tacna" :{
+          "hit" : {
+            "2020" :25,
+            "2025" : 25
+          }, 
+          "perc" :{
+            "2020" : 25,
+            "2025" : 25
+          }
+        },
+        "arequipa" :{
+          "hit" : {
+            "2020" : 25,
+            "2025" : 25
+
+          }, 
+          "perc" :{
+            "2020" : 25,
+            "2025" : 25
+          }
+        },
+        "juliaca" :{
+          "hit" : {
+            "2020" : 25,
+            "2025" : 25
+
+          }, 
+          "perc" :{
+            "2020" : 25,
+            "2025" : 25
+          }
+        }
+      }
+    }
   },
   "SCI": {
     "definition": "self consumption index",
     "unity": "%",
-    "arequipa_1": 100.0,
-    "arequipa_2": 100.0,
-    "tacna_1": 100.0,
-    "tacna_2": 100.0,
-    "lima_1": 100.0,
-    "lima_2": 100.0
+     "values" : {
+      "espinoza":{
+        "arequipa" : {
+          "leasing": 100.0,
+          "owner_financed" :100.0
+        },
+        "tacna" : {
+          "leasing": 100.0,
+          "owner_financed" : 100.0
+        },
+        "lima" : {
+          "leasing": 100.0,
+          "owner_financed" : 100.0
+        }
+      },
+      "mater" : {
+        "lima" :{
+          "hit" : {
+            "2020" :100.0,
+            "2025" : 100.0
+          }, 
+          "perc" :{
+            "2020" : 100.0,
+            "2025" : 100.0
+          }
+        },
+        "chachapoyas" :{
+          "hit" : {
+            "2020" : 100.0,
+            "2025" : 100.0
+
+          }, 
+          "perc" :{
+            "2020" : 100.0,
+            "2025" : 100.0
+          }
+        },
+        "tacna" :{
+          "hit" : {
+            "2020" :100.0,
+            "2025" : 100.0
+          }, 
+          "perc" :{
+            "2020" : 100.0,
+            "2025" : 100.0
+          }
+        },
+        "arequipa" :{
+          "hit" : {
+            "2020" : 100.0,
+            "2025" : 100.0
+
+          }, 
+          "perc" :{
+            "2020" : 100.0,
+            "2025" : 100.0
+          }
+        },
+        "juliaca" :{
+          "hit" : {
+            "2020" : 100.0,
+            "2025" : 100.0
+
+          }, 
+          "perc" :{
+            "2020" : 100.0,
+            "2025" : 100.0
+          }
+        }
+      }
+    }
   },
   "COM": {
     "definition": "anual operation and maintenance cost",
     "unity": "% of PVi",
-    "arequipa_1": 0.835065728462996,
-    "arequipa_2": 0.712232022701459,
-    "tacna_1": 0.835065728462996,
-    "tacna_2": 0.712232022701459,
-    "lima_1": 1.03726125310589,
-    "lima_2": 0.884824060779369
+    "values" : {
+      "espinoza":{
+        "arequipa" : {
+          "leasing": 0.835065728462996,
+          "owner_financed" :0.712232022701459
+        },
+        "tacna" : {
+          "leasing": 0.835065728462996,
+          "owner_financed" : 0.712232022701459
+        },
+        "lima" : {
+          "leasing": 1.03726125310589,
+          "owner_financed" : 0.884824060779369
+        }
+      },
+      "mater" : {	
+        "lima" :{
+          "hit" : {
+            "2020" :0.813038176,
+            "2025" : 1.090434038
+          }, 
+          "perc" :{
+            "2020" : 0.876644206,
+            "2025" : 1.011316216
+          }
+        },
+        "chachapoyas" :{
+          "hit" : {
+            "2020" : 0.656882574,
+            "2025" : 0.880713205
+          }, 
+          "perc" :{
+            "2020" : 0.708041111,
+            "2025" : 0.817078482
+          }
+        },
+        "tacna" :{
+          "hit" : {
+            "2020" :0.688550493,
+            "2025" : 0.99179102
+          }, 
+          "perc" :{
+            "2020" : 0.744333273,
+            "2025" : 0.912877874
+          }
+        },
+        "arequipa" :{
+          "hit" : {
+            "2020" : 0.733899595,
+            "2025" : 0.925856045
+          }, 
+          "perc" :{
+            "2020" : 0.797341077,
+            "2025" : 0.856469351
+          }
+        },
+        "juliaca" :{
+          "hit" : {
+            "2020" : 0.609415795,
+            "2025" : 0.812809927
+          }, 
+          "perc" :{
+            "2020" : 0.653450909,
+            "2025" : 0.758035839
+          }
+        }
+      }
+    }
   },
   "d": {
     "definition": "discount rate",
     "unity": "%",
-    "arequipa_1": 12.0,
-    "arequipa_2": 9.72,
-    "tacna_1": 12.0,
-    "tacna_2": 9.72,
-    "lima_1": 12.0,
-    "lima_2": 9.72
+    "values" : {
+      "espinoza":{
+        "arequipa" : {
+          "leasing": 12.0,
+          "owner_financed" :9.72
+        },
+        "tacna" : {
+          "leasing": 12.0,
+          "owner_financed" : 9.72
+        },
+        "lima" : {
+          "leasing": 12.0,
+          "owner_financed" : 9.72
+        }
+      },
+      "mater" : {	
+        "lima" :{
+          "hit" : {
+            "2020" :5,
+            "2025" : 5
+          }, 
+          "perc" :{
+            "2020" : 5,
+            "2025" : 5
+          }
+        },
+        "chachapoyas" :{
+          "hit" : {
+            "2020" : 5,
+            "2025" : 5
+          }, 
+          "perc" :{
+            "2020" : 5,
+            "2025" : 5
+          }
+        },
+        "tacna" :{
+          "hit" : {
+            "2020" :5,
+            "2025" : 5
+          }, 
+          "perc" :{
+            "2020" : 5,
+            "2025" : 5
+          }
+        },
+        "arequipa" :{
+          "hit" : {
+            "2020" : 5,
+            "2025" : 5
+          }, 
+          "perc" :{
+            "2020" : 5,
+            "2025" : 5
+          }
+        },
+        "juliaca" :{
+          "hit" : {
+            "2020" : 5,
+            "2025" : 5
+          }, 
+          "perc" :{
+            "2020" : 5,
+            "2025" : 5
+          }
+        }
+      }
+    }
   },
   "pg": {
     "definition": "price at which electricity is sold to the grid",
     "unity": "USD/kWh",
-    "arequipa_1": 0.0,
-    "arequipa_2": 0.0,
-    "tacna_1": 0.0,
-    "tacna_2": 0.0,
-    "lima_1": 0.0,
-    "lima_2": 0.0
+    "values" : {
+      "espinoza":{
+        "arequipa" : {
+          "leasing": 0,
+          "owner_financed" :0
+        },
+        "tacna" : {
+          "leasing": 0,
+          "owner_financed" : 0
+        },
+        "lima" : {
+          "leasing": 0,
+          "owner_financed" : 0
+        }
+      },
+      "mater" : {	
+        "lima" :{
+          "hit" : {
+            "2020" : 0,
+            "2025" : 0
+          }, 
+          "perc" :{
+            "2020" : 5,
+            "2025" : 5
+          }
+        },
+        "chachapoyas" :{
+          "hit" : {
+            "2020" : 0,
+            "2025" : 0
+          }, 
+          "perc" :{
+            "2020" : 0,
+            "2025" : 0
+          }
+        },
+        "tacna" :{
+          "hit" : {
+            "2020" :0,
+            "2025" : 0
+          }, 
+          "perc" :{
+            "2020" : 0,
+            "2025" : 0
+          }
+        },
+        "arequipa" :{
+          "hit" : {
+            "2020" : 0,
+            "2025" : 0
+          }, 
+          "perc" :{
+            "2020" : 0,
+            "2025" : 0
+          }
+        },
+        "juliaca" :{
+          "hit" : {
+            "2020" : 0,
+            "2025" : 0
+          }, 
+          "perc" :{
+            "2020" : 0,
+            "2025" : 0
+          }
+        }
+      }
+    }
   },
   "ps": {
     "definition": "price at which electricity is self consumed",
     "unity": "USD/kWh",
-    "arequipa_1": 0.1686,
-    "arequipa_2": 0.1686,
-    "tacna_1": 0.1716,
-    "tacna_2": 0.1716,
-    "lima_1": 0.1537,
-    "lima_2": 0.1537
+    "values" : {
+      "espinoza":{
+        "arequipa" : {
+          "leasing": 0.1686,
+          "owner_financed" :0.1686
+        },
+        "tacna" : {
+          "leasing": 0.1716,
+          "owner_financed" : 0.1716
+        },
+        "lima" : {
+          "leasing": 0.1537,
+          "owner_financed" : 0.1537
+        }
+      },
+      "mater" : {	
+        "lima" :{
+          "hit" : {
+            "2020" : 0.1547,
+            "2025" : 0.1743
+          }, 
+          "perc" :{
+            "2020" : 0.1547,
+            "2025" : 0.1743
+          }
+        },
+        "chachapoyas" :{
+          "hit" : {
+            "2020" : 0.2267,
+            "2025" : 0.226
+          }, 
+          "perc" :{
+            "2020" : 0.2267,
+            "2025" : 0.226
+          }
+        },
+        "tacna" :{
+          "hit" : {
+            "2020" :0.1765,
+            "2025" : 0.2033
+          }, 
+          "perc" :{
+            "2020" : 0.1765,
+            "2025" : 0.2033
+          }
+        },
+        "arequipa" :{
+          "hit" : {
+            "2020" : 0.1734,
+            "2025" : 0.1929
+          }, 
+          "perc" :{
+            "2020" : 0.1734,
+            "2025" : 0.1929
+          }
+        },
+        "juliaca" :{
+          "hit" : {
+            "2020" : 0.2073,
+            "2025" : 0.2464
+          }, 
+          "perc" :{
+            "2020" : 0.2073,
+            "2025" : 0.2464
+          }
+        }
+      }
+    }
   },
   "rpg": {
     "definition": "annual escalation rate of pg",
     "unity": "%",
-    "arequipa_1": 3.5,
-    "arequipa_2": 3.5,
-    "tacna_1": 3.5,
-    "tacna_2": 3.5,
-    "lima_1": 3.5,
-    "lima_2": 3.5
+    "values" : {
+      "espinoza":{
+        "arequipa" : {
+          "leasing": 3.5,
+          "owner_financed" :3.5
+        },
+        "tacna" : {
+          "leasing": 3.5,
+          "owner_financed" : 3.5
+        },
+        "lima" : {
+          "leasing": 3.5,
+          "owner_financed" : 3.5
+        }
+      },
+      "mater" : {	
+        "lima" :{
+          "hit" : {
+            "2020" : 3.5,
+            "2025" : 1.97
+          }, 
+          "perc" :{
+            "2020" : 3.5,
+            "2025" : 1.97
+          }
+        },
+        "chachapoyas" :{
+          "hit" : {
+            "2020" : 3.5,
+            "2025" : 1.97
+          }, 
+          "perc" :{
+            "2020" : 3.5,
+            "2025" : 1.97
+          }
+        },
+        "tacna" :{
+          "hit" : {
+            "2020" :3.5,
+            "2025" : 1.97
+          }, 
+          "perc" :{
+            "2020" : 3.5,
+            "2025" : 1.97
+          }
+        },
+        "arequipa" :{
+          "hit" : {
+            "2020" : 3.5,
+            "2025" : 1.97
+          }, 
+          "perc" :{
+            "2020" : 3.5,
+            "2025" : 1.97
+          }
+        },
+        "juliaca" :{
+          "hit" : {
+            "2020" : 3.5,
+            "2025" : 1.97
+          }, 
+          "perc" :{
+            "2020" : 3.5,
+            "2025" : 1.97
+          }
+        }
+      }
+    }
   },
   "rps": {
     "definition": "annual escalation rate of ps",
     "unity": "%",
-    "arequipa_1": 3.5,
-    "arequipa_2": 3.5,
-    "tacna_1": 3.5,
-    "tacna_2": 3.5,
-    "lima_1": 3.5,
-    "lima_2": 3.5
+    "values" : {
+      "espinoza":{
+        "arequipa" : {
+          "leasing": 3.5,
+          "owner_financed" :3.5
+        },
+        "tacna" : {
+          "leasing": 3.5,
+          "owner_financed" : 3.5
+        },
+        "lima" : {
+          "leasing": 3.5,
+          "owner_financed" : 3.5
+        }
+      },
+      "mater" : {	
+        "lima" :{
+          "hit" : {
+            "2020" : 3.5,
+            "2025" : 1.97
+          }, 
+          "perc" :{
+            "2020" : 3.5,
+            "2025" : 1.97
+          }
+        },
+        "chachapoyas" :{
+          "hit" : {
+            "2020" : 3.5,
+            "2025" : 1.97
+          }, 
+          "perc" :{
+            "2020" : 3.5,
+            "2025" : 1.97
+          }
+        },
+        "tacna" :{
+          "hit" : {
+            "2020" :3.5,
+            "2025" : 1.97
+          }, 
+          "perc" :{
+            "2020" : 3.5,
+            "2025" : 1.97
+          }
+        },
+        "arequipa" :{
+          "hit" : {
+            "2020" : 3.5,
+            "2025" : 1.97
+          }, 
+          "perc" :{
+            "2020" : 3.5,
+            "2025" : 1.97
+          }
+        },
+        "juliaca" :{
+          "hit" : {
+            "2020" : 3.5,
+            "2025" : 1.97
+          }, 
+          "perc" :{
+            "2020" : 3.5,
+            "2025" : 1.97
+          }
+        }
+      }
+    }
   },
-  "rom": {
+  "rOM": {
     "definition": "annual escalation rate of opex",
     "unity": "%",
-    "arequipa_1": 2.0,
-    "arequipa_2": 2.0,
-    "tacna_1": 2.0,
-    "tacna_2": 2.0,
-    "lima_1": 2.0,
-    "lima_2": 2.0
+    "values" : {
+      "espinoza":{
+        "arequipa" : {
+          "leasing": 2,
+          "owner_financed" :2
+        },
+        "tacna" : {
+          "leasing": 2,
+          "owner_financed" : 2
+        },
+        "lima" : {
+          "leasing": 2,
+          "owner_financed" : 2
+        }
+      },
+      "mater" : {	
+        "lima" :{
+          "hit" : {
+            "2020" : 2,
+            "2025" : 1.97
+          }, 
+          "perc" :{
+            "2020" : 2,
+            "2025" : 1.97
+          }
+        },
+        "chachapoyas" :{
+          "hit" : {
+            "2020" : 2,
+            "2025" : 1.97
+          }, 
+          "perc" :{
+            "2020" : 2,
+            "2025" : 1.97
+          }
+        },
+        "tacna" :{
+          "hit" : {
+            "2020" :2,
+            "2025" : 1.97
+          }, 
+          "perc" :{
+            "2020" : 2,
+            "2025" : 1.97
+          }
+        },
+        "arequipa" :{
+          "hit" : {
+            "2020" : 2,
+            "2025" : 1.97
+          }, 
+          "perc" :{
+            "2020" : 2,
+            "2025" : 1.97
+          }
+        },
+        "juliaca" :{
+          "hit" : {
+            "2020" : 2,
+            "2025" : 1.97
+          }, 
+          "perc" :{
+            "2020" : 2,
+            "2025" : 1.97
+          }
+        }
+      }
+    }
   },
   "T": {
     "definition": "income tax rate",
     "unity": "%",
-    "arequipa_1": 28.0,
-    "arequipa_2": 15.0,
-    "tacna_1": 28.0,
-    "tacna_2": 15.0,
-    "lima_1": 28.0,
-    "lima_2": 15.0
+    "values" : {
+      "espinoza":{
+        "arequipa" : {
+          "leasing": 28.0,
+          "owner_financed" :15.0
+        },
+        "tacna" : {
+          "leasing": 28.0,
+          "owner_financed" : 15.0
+        },
+        "lima" : {
+          "leasing": 28.0,
+          "owner_financed" : 15.0
+        }
+      },
+      "mater" : {	
+        "lima" :{
+          "hit" : {
+            "2020" : 0,
+            "2025" : 0
+          }, 
+          "perc" :{
+            "2020" : 0,
+            "2025" : 0
+          }
+        },
+        "chachapoyas" :{
+          "hit" : {
+            "2020" : 0,
+            "2025" : 0
+          }, 
+          "perc" :{
+            "2020" : 0,
+            "2025" : 0
+          }
+        },
+        "tacna" :{
+          "hit" : {
+            "2020" :0,
+            "2025" : 0
+          }, 
+          "perc" :{
+            "2020" : 0,
+            "2025" : 0
+          }
+        },
+        "arequipa" :{
+          "hit" : {
+            "2020" : 0,
+            "2025" : 0
+          }, 
+          "perc" :{
+            "2020" : 0,
+            "2025" : 0
+          }
+        },
+        "juliaca" :{
+          "hit" : {
+            "2020" : 0,
+            "2025" : 0
+          }, 
+          "perc" :{
+            "2020" : 0,
+            "2025" : 0
+          }
+        }
+      }
+    }
   },
   "Nd": {
     "definition": "period of amortization of the investment for tax purposes",
     "unity": "years",
-    "arequipa_1": 10.0,
-    "arequipa_2": 0.0,
-    "tacna_1": 10.0,
-    "tacna_2": 0.0,
-    "lima_1": 10.0,
-    "lima_2": 0.0
+    "values" : {
+      "espinoza":{
+        "arequipa" : {
+          "leasing": 10.0,
+          "owner_financed" :0.0
+        },
+        "tacna" : {
+          "leasing": 10.0,
+          "owner_financed" : 0.0
+        },
+        "lima" : {
+          "leasing": 10.0,
+          "owner_financed" : 0.0
+        }
+      },
+      "mater" : {	
+        "lima" :{
+          "hit" : {
+            "2020" : 0,
+            "2025" : 0
+          }, 
+          "perc" :{
+            "2020" : 0,
+            "2025" : 0
+          }
+        },
+        "chachapoyas" :{
+          "hit" : {
+            "2020" : 0,
+            "2025" : 0
+          }, 
+          "perc" :{
+            "2020" : 0,
+            "2025" : 0
+          }
+        },
+        "tacna" :{
+          "hit" : {
+            "2020" :0,
+            "2025" : 0
+          }, 
+          "perc" :{
+            "2020" : 0,
+            "2025" : 0
+          }
+        },
+        "arequipa" :{
+          "hit" : {
+            "2020" : 0,
+            "2025" : 0
+          }, 
+          "perc" :{
+            "2020" : 0,
+            "2025" : 0
+          }
+        },
+        "juliaca" :{
+          "hit" : {
+            "2020" : 0,
+            "2025" : 0
+          }, 
+          "perc" :{
+            "2020" : 0,
+            "2025" : 0
+          }
+        }
+      }
+    }
   },
   "Xd": {
     "definition": "total depreciation allowance",
     "unity": "% of PVi",
-    "arequipa_1": 100.0,
-    "arequipa_2": 0.0,
-    "tacna_1": 100.0,
-    "tacna_2": 0.0,
-    "lima_1": 100.0,
-    "lima_2": 0.0
+    "values" : {
+      "espinoza":{
+        "arequipa" : {
+          "leasing": 100.0,
+          "owner_financed" :0.0
+        },
+        "tacna" : {
+          "leasing": 100.0,
+          "owner_financed" : 0.0
+        },
+        "lima" : {
+          "leasing": 100.0,
+          "owner_financed" : 0.0
+        }
+      },
+      "mater" : {	
+        "lima" :{
+          "hit" : {
+            "2020" : 0,
+            "2025" : 0
+          }, 
+          "perc" :{
+            "2020" : 0,
+            "2025" : 0
+          }
+        },
+        "chachapoyas" :{
+          "hit" : {
+            "2020" : 0,
+            "2025" : 0
+          }, 
+          "perc" :{
+            "2020" : 0,
+            "2025" : 0
+          }
+        },
+        "tacna" :{
+          "hit" : {
+            "2020" :0,
+            "2025" : 0
+          }, 
+          "perc" :{
+            "2020" : 0,
+            "2025" : 0
+          }
+        },
+        "arequipa" :{
+          "hit" : {
+            "2020" : 0,
+            "2025" : 0
+          }, 
+          "perc" :{
+            "2020" : 0,
+            "2025" : 0
+          }
+        },
+        "juliaca" :{
+          "hit" : {
+            "2020" : 0,
+            "2025" : 0
+          }, 
+          "perc" :{
+            "2020" : 0,
+            "2025" : 0
+          }
+        }
+      }
+    }
   },
   "Xl": {
     "definition": "part of PVi financed with loan",
     "unity": "% of PVi",
-    "arequipa_1": 0.0,
-    "arequipa_2": 80.0,
-    "tacna_1": 0.0,
-    "tacna_2": 80.0,
-    "lima_1": 0.0,
-    "lima_2": 80.0
+    "values" : {
+      "espinoza":{
+        "arequipa" : {
+          "leasing": 0.0,
+          "owner_financed" :80.0
+        },
+        "tacna" : {
+          "leasing": 0.0,
+          "owner_financed" : 80.0
+        },
+        "lima" : {
+          "leasing": 0.0,
+          "owner_financed" : 80.0
+        }
+      },
+      "mater" : {	
+        "lima" :{
+          "hit" : {
+            "2020" : 0,
+            "2025" : 0
+          }, 
+          "perc" :{
+            "2020" : 0,
+            "2025" : 0
+          }
+        },
+        "chachapoyas" :{
+          "hit" : {
+            "2020" : 0,
+            "2025" : 0
+          }, 
+          "perc" :{
+            "2020" : 0,
+            "2025" : 0
+          }
+        },
+        "tacna" :{
+          "hit" : {
+            "2020" :0,
+            "2025" : 0
+          }, 
+          "perc" :{
+            "2020" : 0,
+            "2025" : 0
+          }
+        },
+        "arequipa" :{
+          "hit" : {
+            "2020" : 0,
+            "2025" : 0
+          }, 
+          "perc" :{
+            "2020" : 0,
+            "2025" : 0
+          }
+        },
+        "juliaca" :{
+          "hit" : {
+            "2020" : 0,
+            "2025" : 0
+          }, 
+          "perc" :{
+            "2020" : 0,
+            "2025" : 0
+          }
+        }
+      }
+    }
   },
   "Xec": {
     "definition": "part of PVi financed with equity capital",
     "unity": "% of PVi",
-    "arequipa_1": 100.0,
-    "arequipa_2": 20.0,
-    "tacna_1": 100.0,
-    "tacna_2": 20.0,
-    "lima_1": 100.0,
-    "lima_2": 20.0
+    "values" : {
+      "espinoza":{
+        "arequipa" : {
+          "leasing": 100.0,
+          "owner_financed" :20.0
+        },
+        "tacna" : {
+          "leasing": 100.0,
+          "owner_financed" : 20.0
+        },
+        "lima" : {
+          "leasing": 100.0,
+          "owner_financed" : 20.0
+        }
+      },
+      "mater" : {	
+        "lima" :{
+          "hit" : {
+            "2020" : 100.0,
+            "2025" : 100.0
+          }, 
+          "perc" :{
+            "2020" : 100.0,
+            "2025" : 100.0
+          }
+        },
+        "chachapoyas" :{
+          "hit" : {
+            "2020" : 100.0,
+            "2025" : 100.0
+          }, 
+          "perc" :{
+            "2020" : 100.0,
+            "2025" : 100.0
+          }
+        },
+        "tacna" :{
+          "hit" : {
+            "2020" :100.0,
+            "2025" : 100.0
+          }, 
+          "perc" :{
+            "2020" : 100.0,
+            "2025" : 100.0
+          }
+        },
+        "arequipa" :{
+          "hit" : {
+            "2020" : 100.0,
+            "2025" : 100.0
+          }, 
+          "perc" :{
+            "2020" : 100.0,
+            "2025" : 100.0
+          }
+        },
+        "juliaca" :{
+          "hit" : {
+            "2020" : 100.0,
+            "2025" : 100.0
+          }, 
+          "perc" :{
+            "2020" : 100.0,
+            "2025" : 100.0
+          }
+        }
+      }
+    }
   },
   "Xis": {
     "definition": "part of PVi financed with subsidy or grant",
     "unity": "% of PVi",
-    "arequipa_1": 0.0,
-    "arequipa_2": 0.0,
-    "tacna_1": 0.0,
-    "tacna_2": 0.0,
-    "lima_1": 0.0,
-    "lima_2": 0.0
+    "values" : {
+      "espinoza":{
+        "arequipa" : {
+          "leasing": 0.0,
+          "owner_financed" :0.0
+        },
+        "tacna" : {
+          "leasing": 0.0,
+          "owner_financed" : 0.0
+        },
+        "lima" : {
+          "leasing": 0.0,
+          "owner_financed" : 0.0
+        }
+      },
+      "mater" : {	
+        "lima" :{
+          "hit" : {
+            "2020" : 0,
+            "2025" : 0
+          }, 
+          "perc" :{
+            "2020" : 0,
+            "2025" : 0
+          }
+        },
+        "chachapoyas" :{
+          "hit" : {
+            "2020" : 0,
+            "2025" : 0
+          }, 
+          "perc" :{
+            "2020" : 0,
+            "2025" : 0
+          }
+        },
+        "tacna" :{
+          "hit" : {
+            "2020" :0,
+            "2025" : 0
+          }, 
+          "perc" :{
+            "2020" : 0,
+            "2025" : 0
+          }
+        },
+        "arequipa" :{
+          "hit" : {
+            "2020" : 0,
+            "2025" : 0
+          }, 
+          "perc" :{
+            "2020" : 0,
+            "2025" : 0
+          }
+        },
+        "juliaca" :{
+          "hit" : {
+            "2020" : 0,
+            "2025" : 0
+          }, 
+          "perc" :{
+            "2020" : 0,
+            "2025" : 0
+          }
+        }
+      }
+    }
   },
   "il": {
     "definition": "annual loan interest",
     "unity": "%",
-    "arequipa_1": 0.0,
-    "arequipa_2": 14.0,
-    "tacna_1": 0.0,
-    "tacna_2": 14.0,
-    "lima_1": 0.0,
-    "lima_2": 14.0
+    "values" : {
+      "espinoza":{
+        "arequipa" : {
+          "leasing": 0.0,
+          "owner_financed" :14.0
+        },
+        "tacna" : {
+          "leasing": 0.0,
+          "owner_financed" : 14.0
+        },
+        "lima" : {
+          "leasing": 0.0,
+          "owner_financed" : 14.0
+        }
+      },
+      "mater" : {	
+        "lima" :{
+          "hit" : {
+            "2020" : 0,
+            "2025" : 0
+          }, 
+          "perc" :{
+            "2020" : 0,
+            "2025" : 0
+          }
+        },
+        "chachapoyas" :{
+          "hit" : {
+            "2020" : 0,
+            "2025" : 0
+          }, 
+          "perc" :{
+            "2020" : 0,
+            "2025" : 0
+          }
+        },
+        "tacna" :{
+          "hit" : {
+            "2020" :0,
+            "2025" : 0
+          }, 
+          "perc" :{
+            "2020" : 0,
+            "2025" : 0
+          }
+        },
+        "arequipa" :{
+          "hit" : {
+            "2020" : 0,
+            "2025" : 0
+          }, 
+          "perc" :{
+            "2020" : 0,
+            "2025" : 0
+          }
+        },
+        "juliaca" :{
+          "hit" : {
+            "2020" : 0,
+            "2025" : 0
+          }, 
+          "perc" :{
+            "2020" : 0,
+            "2025" : 0
+          }
+        }
+      }
+    }
   },
   "Nis": {
     "definition": "amortization of investment subsidy",
     "unity": "years",
-    "arequipa_1": 0.0,
-    "arequipa_2": 0.0,
-    "tacna_1": 0.0,
-    "tacna_2": 0.0,
-    "lima_1": 0.0,
-    "lima_2": 0.0
+    "values" : {
+      "espinoza":{
+        "arequipa" : {
+          "leasing": 0.0,
+          "owner_financed" :0.0
+        },
+        "tacna" : {
+          "leasing": 0.0,
+          "owner_financed" : 0.0
+        },
+        "lima" : {
+          "leasing": 0.0,
+          "owner_financed" : 0.0
+        }
+      },
+      "mater" : {	
+        "lima" :{
+          "hit" : {
+            "2020" : 0,
+            "2025" : 0
+          }, 
+          "perc" :{
+            "2020" : 0,
+            "2025" : 0
+          }
+        },
+        "chachapoyas" :{
+          "hit" : {
+            "2020" : 0,
+            "2025" : 0
+          }, 
+          "perc" :{
+            "2020" : 0,
+            "2025" : 0
+          }
+        },
+        "tacna" :{
+          "hit" : {
+            "2020" :0,
+            "2025" : 0
+          }, 
+          "perc" :{
+            "2020" : 0,
+            "2025" : 0
+          }
+        },
+        "arequipa" :{
+          "hit" : {
+            "2020" : 0,
+            "2025" : 0
+          }, 
+          "perc" :{
+            "2020" : 0,
+            "2025" : 0
+          }
+        },
+        "juliaca" :{
+          "hit" : {
+            "2020" : 0,
+            "2025" : 0
+          }, 
+          "perc" :{
+            "2020" : 0,
+            "2025" : 0
+          }
+        }
+      }
+    }
   },
   "Nl": {
     "definition": "amortization of loan",
     "unity": "years",
-    "arequipa_1": 0.0,
-    "arequipa_2": 10.0,
-    "tacna_1": 0.0,
-    "tacna_2": 10.0,
-    "lima_1": 0.0,
-    "lima_2": 10.0
+    "values" : {
+      "espinoza":{
+        "arequipa" : {
+          "leasing": 0.0,
+          "owner_financed" :10.0
+        },
+        "tacna" : {
+          "leasing": 0.0,
+          "owner_financed" : 10.0
+        },
+        "lima" : {
+          "leasing": 0.0,
+          "owner_financed" : 10.0
+        }
+      },
+      "mater" : {	
+        "lima" :{
+          "hit" : {
+            "2020" : 0,
+            "2025" : 0
+          }, 
+          "perc" :{
+            "2020" : 0,
+            "2025" : 0
+          }
+        },
+        "chachapoyas" :{
+          "hit" : {
+            "2020" : 0,
+            "2025" : 0
+          }, 
+          "perc" :{
+            "2020" : 0,
+            "2025" : 0
+          }
+        },
+        "tacna" :{
+          "hit" : {
+            "2020" :0,
+            "2025" : 0
+          }, 
+          "perc" :{
+            "2020" : 0,
+            "2025" : 0
+          }
+        },
+        "arequipa" :{
+          "hit" : {
+            "2020" : 0,
+            "2025" : 0
+          }, 
+          "perc" :{
+            "2020" : 0,
+            "2025" : 0
+          }
+        },
+        "juliaca" :{
+          "hit" : {
+            "2020" : 0,
+            "2025" : 0
+          }, 
+          "perc" :{
+            "2020" : 0,
+            "2025" : 0
+          }
+        }
+      }
+    }
   },
   "dec": {
     "definition": "annual dividend of the equity capital or return on equity",
     "unity": "%",
-    "arequipa_1": 6.0,
-    "arequipa_2": 1.0,
-    "tacna_1": 6.0,
-    "tacna_2": 1.0,
-    "lima_1": 6.0,
-    "lima_2": 1.0
+    "values" : {
+      "espinoza":{
+        "arequipa" : {
+          "leasing": 6.0,
+          "owner_financed" :1.0
+        },
+        "tacna" : {
+          "leasing": 6.0,
+          "owner_financed" : 1.0
+        },
+        "lima" : {
+          "leasing": 6.0,
+          "owner_financed" : 1.0
+        }
+      },
+      "mater" : {	
+        "lima" :{
+          "hit" : {
+            "2020" : 0,
+            "2025" : 0
+          }, 
+          "perc" :{
+            "2020" : 0,
+            "2025" : 0
+          }
+        },
+        "chachapoyas" :{
+          "hit" : {
+            "2020" : 0,
+            "2025" : 0
+          }, 
+          "perc" :{
+            "2020" : 0,
+            "2025" : 0
+          }
+        },
+        "tacna" :{
+          "hit" : {
+            "2020" :0,
+            "2025" : 0
+          }, 
+          "perc" :{
+            "2020" : 0,
+            "2025" : 0
+          }
+        },
+        "arequipa" :{
+          "hit" : {
+            "2020" : 0,
+            "2025" : 0
+          }, 
+          "perc" :{
+            "2020" : 0,
+            "2025" : 0
+          }
+        },
+        "juliaca" :{
+          "hit" : {
+            "2020" : 0,
+            "2025" : 0
+          }, 
+          "perc" :{
+            "2020" : 0,
+            "2025" : 0
+          }
+        }
+      }
+    }
   }
 }

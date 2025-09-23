@@ -26,9 +26,30 @@ import {fillParams} from "./../utils"
 const initialTechnicalParams: TechnicalParameters = { Hopt: 0, P: 0, PR: 0, rd: 0, N: 0, SCI: 0};
 const initialEconomicParams: EconomicParameters = { d: 0, pg: 0, ps: 0, rpg: 0, rps: 0, rOM: 0, T: 0, Nd: 0, Xd: 0, Cu: 0, COM: 0};
 const initialFinancialParams: FinancialParameters = { Xl: 0, Xec: 0, Xis: 0, il: 0, Nis: 0, Nl: 0, dec: 0 };
-const cities = ["Choose", "arequipa_1","arequipa_2","tacna_1","tacna_2","lima_1","lima_2"];
+const scenarioCities = {
+  espinoza: {
+    arequipa: ["leasing", "owner_financed"],
+    tacna: ["leasing", "owner_financed"],
+    lima: ["leasing", "owner_financed"]
+  },
+  mater: {
+    arequipa: ["hit", "perc"],
+    tacna: ["hit", "perc"],
+    lima: ["hit", "perc"],
+    chachapapas: ["hit", "perc"],
+    juliaca: ["hit", "perc"]
+  }
+} as const;
+const years = ["Year","2020", "2025"];
+
+type Scenario = keyof typeof scenarioCities; // "espinoza" | "mater"
+//type City<S extends Scenario> = keyof typeof scenarioCities[S];
+
+
 
 const MainPage: React.FC = () => {
+  const API_URL = process.env.REACT_APP_API_URL || "";
+
   const [params, setParams] = useState<Params>({
     economicParams: initialEconomicParams,
     financialParams: initialFinancialParams,
@@ -36,7 +57,11 @@ const MainPage: React.FC = () => {
   });
   const [loading, setLoading] = useState<boolean>(false);
   const [results, setResults] = useState<Results | undefined>(undefined);
-  const [city, setCity] = useState<string>("")
+  const [scenario, setScenario] = useState<Scenario | "">("");
+  const [city, setCity] = useState<string>(""); 
+  const [financingScheme, setFinancingScheme] = useState<string>("");
+  const [year, setYear] = useState<string>("");
+
 
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>,
@@ -53,9 +78,8 @@ const MainPage: React.FC = () => {
   };
 
   const setParametersValue = () => {
-    const parameters_prefilled = fillParams(parameters,city);
+    const parameters_prefilled = fillParams(parameters,city ?? "",scenario, financingScheme, scenario === "mater" ? year : undefined );
     setParams(parameters_prefilled);
-    console.log(params);
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -63,13 +87,14 @@ const MainPage: React.FC = () => {
     setLoading(true);
 
     try {
-      const response = await fetch("/calculate", {
+      const response = await fetch(`${API_URL}/calculate`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           technical_parameters: params.technicalParams,
           economic_parameters: params.economicParams,
           financial_parameters: params.financialParams,
+          source : scenario
         }),
       });
 
@@ -117,21 +142,83 @@ const MainPage: React.FC = () => {
         />
       </Section>
 
-      <ControlsContainer>
-    <ControlSelect
-      name="Choose a model"
-      key='Select-City'
-      onChange={(e) => setCity(e.target.value)}
-      value={city}
+    <ControlsContainer>
+      <ControlSelect
+      name="Choose a scenario"
+      key='Select-Scenario'
+      onChange={(e) => {
+        setScenario(e.target.value as Scenario);
+        setCity("");
+        setFinancingScheme("");
+      }}
+      value={scenario}
     >
-      {cities.map((c) => (
+      <option value="" hidden>
+        Choose
+      </option>
+      {Object.keys(scenarioCities).map((c) => (
         <option key={c} value={c}>
           {c}
         </option>
       ))}
     </ControlSelect>
 
-    <ControlButton type="button" disabled={city === "Choose" || city === ""} onClick={() => setParametersValue()}>
+    {scenario && <ControlSelect
+      name="Choose a city"
+      key='Select-City'
+      onChange={(e) => {
+        setCity(e.target.value);
+        setFinancingScheme("");
+      }}
+      value={city}
+      >
+        <option value="" disabled>
+        Choose
+        </option>
+          {Object.keys(scenarioCities[scenario]).map((c) => (
+            <option key={c} value={c}>
+              {c}
+            </option>
+          ))}
+      </ControlSelect>
+    }
+
+    {scenario && city && <ControlSelect
+      name="Choose a financing scheme"
+      key='Select-Financing'
+      onChange={(e) => setFinancingScheme(e.target.value)}
+      value={financingScheme}
+    >
+      <option value="" hidden>
+        Choose
+      </option>
+      {scenarioCities[scenario][city as keyof typeof scenarioCities[typeof scenario]].map((c) => (
+        <option key={c} value={c}>
+          {c}
+        </option>
+      ))}
+    </ControlSelect>
+    
+    }
+    
+     {scenario === "mater" && city && financingScheme && <ControlSelect
+      name="Choose a year"
+      key='Select-Year'
+      onChange={(e) => setYear(e.target.value)}
+      value={year}
+    >
+      {years.map((c) => (
+        <option key={c} value={c}>
+          {c}
+        </option>
+      ))}
+    </ControlSelect>
+    
+    };
+
+    
+
+    <ControlButton type="button" disabled={city === "" || financingScheme === ""} onClick={() => setParametersValue()}>
       Fill data
     </ControlButton>
 
@@ -144,7 +231,10 @@ const MainPage: React.FC = () => {
           technicalParams: initialTechnicalParams,
         });
         setResults(undefined);
-        setCity("Choose");
+        setScenario("");
+        setCity("");
+        setFinancingScheme("");
+        setYear("Choose a Year")
       }}
     >
       Reset

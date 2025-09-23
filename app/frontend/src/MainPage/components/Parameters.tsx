@@ -30,7 +30,7 @@ function Parameters<T extends Record<string, any>>({
               <Label>
                 {key} {meta?.unity ? `(${meta.unity})` : ""}
               </Label>
-              {meta?.definition && <TooltipText>{meta.definition}</TooltipText>}
+              {meta ? <TooltipText>{meta.definition}</TooltipText> : <TooltipText>Not defined yet</TooltipText> }
             </TooltipWrapper>
 
             <Input
