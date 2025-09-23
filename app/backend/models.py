@@ -31,6 +31,12 @@ class FinancialParameters(BaseModel):
     Nl : int     #Nl (amortization of loan) (years): "))
     dec : float   #dec (annual dividend of the equity capital or return on equity) (%): ")) /t 100
 
+class CalculateInput(BaseModel):
+    technical_parameters : TechnicalParameters
+    economic_parameters : EconomicParameters
+    financial_parameters : FinancialParameters
+    source : str
+    
 class Results(BaseModel):
     Result : dict
     msg : str
