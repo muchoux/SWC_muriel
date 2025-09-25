@@ -8,13 +8,13 @@ import matplotlib.pyplot as plt
 
 # --- Select scenario and city ---
 # This section is the only one meant to be modified by the user.
-scenario = 1
-city = "lima"
+scenario = 2
+city = "talavera"
 save_results = False #whether to save results to Excel or not
 
 # --- Import data ---
 # Load the CSV file containing parameters for different cities and scenarios.
-df = pd.read_csv("parameters/parameters_clean.csv", sep=";", decimal=",")
+df = pd.read_csv("parameters/parameters_clean_talavera.csv", sep=";", decimal=",")
 
 # Dynamically build the column name based on selected city and scenario.
 column_key = f"{city.lower()}_{scenario}"
@@ -171,44 +171,111 @@ def NPV(pvi, pvom, pg, ps, rpg, rps, rd, N, T, Nd, Xd, epvs, epvg, source):
     #print("LCC:", pwco)
     return pwci - pwco
 
-def build_cashflow_series(pvi, epvs, epvg, ps, pg, rps, rpg, rd, d, N, T, pvom, source):
-    """
-    Builds annual cash flow series considering income and costs with escalation (USD/year)
-    """
-    flows = [-pvi]
-    for n in range(1, N+1):
-        inflation_ps = ps * ((1 + rps) ** (n - 1))
-        inflation_pg = pg * ((1 + rpg) ** (n - 1))
+# def build_cashflow_series(pvi, epvs, epvg, ps, pg, rps, rpg, rd, d, N, T, pvom, source):  #only for 100% equity
+#     """
+#     Builds annual cash flow series considering income and costs with escalation (USD/year)
+#     """
+#     flows = [-pvi]
+#     for n in range(1, N+1):
+#         inflation_ps = ps * ((1 + rps) ** (n - 1))
+#         inflation_pg = pg * ((1 + rpg) ** (n - 1))
+#         energy_self = epvs * ((1 - rd) ** n)
+#         energy_grid = epvg * ((1 - rd) ** n)
+#         income = (inflation_ps * energy_self + inflation_pg * energy_grid)
+#         opex = pvom * ((1 + rom) ** (n - 1))
+
+# ########### wrong, to change #################
+
+#         # if source == "talavera":
+#         #     income *= (1 - T)
+#         #     opex *= (1 - T)
+
+# ###########################################
+
+#         net = income - opex
+#         flows.append(net)
+#     return flows
+
+def build_cashflow_series(
+    pvi, epvs, epvg, ps, pg, rps, rpg, rd, d, N, T, pvom, rom, source,
+    Xl, Xec, Xis, il, Nis, Nl, dec,
+    perspective="project"
+):
+
+    flows = []
+
+    # --- Year 0 (initial investment) ---
+    if perspective == "project":
+        CF0 = -pvi
+    elif perspective == "client":
+        CF0 = -(Xec * pvi)
+    #     if Xis > 0 and Nis == 0:
+    #         CF0 += Xis * pvi  # subsidy received upfront
+    #     if Xl > 0:
+    #         CF0 += Xl * pvi   # loan disbursement
+    # else:
+    #     raise ValueError("perspective must be 'project' or 'client'")
+
+    flows.append(CF0)
+
+    # --- Financing parameters ---
+    PVl = Xl * pvi       # loan amount
+    PVec = Xec * pvi     # equity capital
+    PVis = Xis * pvi     # subsidy amount
+
+    if PVl > 0 and Nl > 0:
+        loan_annuity = (PVl * il * (1 - T)) / (1 - (1 + il * (1 - T)) ** (-Nl))
+    else:
+        loan_annuity = 0
+
+    # --- Annual loop ---
+    for n in range(1, N + 1):
+        # Energy revenues
+        infl_ps = ps * ((1 + rps) ** (n - 1))
+        infl_pg = pg * ((1 + rpg) ** (n - 1))
         energy_self = epvs * ((1 - rd) ** n)
         energy_grid = epvg * ((1 - rd) ** n)
+        income = infl_ps * energy_self + infl_pg * energy_grid
 
-        income = (inflation_ps * energy_self + inflation_pg * energy_grid)
-        if source == "talavera":
-            income *= (1 - T)
-
+        # O&M costs
         opex = pvom * ((1 + rom) ** (n - 1))
-        if source == "talavera":
-            opex *= (1 - T)
 
-        net = income - opex
+        # Loan payments
+        loan_payment = loan_annuity if (n <= Nl and PVl > 0) else 0
+
+        # Dividends on equity
+        dividend = dec * PVec if PVec > 0 else 0
+
+        # Subsidy amortization (if spread over Nis years)
+        subsidy_term = (PVis / Nis) if (Xis > 0 and Nis > 0 and n <= Nis) else 0
+
+        # Net cash flow
+        if perspective == "project":
+            net = income - opex
+        elif perspective == "client":
+            net = income - opex - loan_payment - dividend + subsidy_term
+
         flows.append(net)
+
     return flows
+
 
 def compute_irr(cashflows):
     """
-    Internal Rate of Return (IRR) of the project (decimal)
+    Internal Rate of Return (IRR) based on full cashflow series (decimal).
     """
     return npf.irr(cashflows)
 
-def compute_dpbt(pvi, cashflows, d):
+
+def compute_dpbt(initial_investment, cashflows, d):
     """
-    Discounted Payback Time (years)
-    Number of years needed to recover initial investment
+    Discounted Payback Time (years).
+    Number of years needed to recover the initial investment.
     """
     discounted_sum = 0
-    for year, cf in enumerate(cashflows[1:], start=1):  # exclude initial investment
+    for year, cf in enumerate(cashflows[1:], start=1):  # exclude year 0
         discounted_sum += cf / ((1 + d) ** year)
-        if discounted_sum >= pvi:
+        if discounted_sum >= initial_investment:
             return year
     return None  # if never recovered
 
@@ -216,39 +283,53 @@ def compute_dpbt(pvi, cashflows, d):
 def run_simulation(source):
     if source not in ["talavera", "espinoza"]:
         raise ValueError("source must be 'talavera' or 'espinoza'")
+
+    # --- Core project parameters ---
     pvi = PVI(P, Cu)
     epv = EPV(Hopt, P, PR)
     epvs = EPVs(epv, SCI)
     epvg = EPVg(epv, SCI)
     pvom = PVOM(pvi, COM)
     epv_discounted = EPV_discounted(Hopt, P, PR, N, rd, d)
+
+    # --- Economic indicators (legacy) ---
     wacc_result = WACC(Xl, Xec, il, dec, T)
     pwco_result = PWCO(pvi, pvom, N, T, Xd, Nd, Xl, Xec, Xis, il, dec, Nis, Nl, source)
     pwci_result = PWCI(ps, pg, N, T, epvs, epvg, source)
     lcoe_result = LCOE(pvi, Hopt, P, PR, rd, d, N, rom, pvom, T, Xd, Nd, source)
     npv_result = NPV(pvi, pvom, pg, ps, rpg, rps, rd, N, T, Nd, Xd, epvs, epvg, source)
-    cashflows = build_cashflow_series(pvi, epvs, epvg, ps, pg, rps, rpg, rd, d, N, T, pvom, source)
-    irr_result = compute_irr(cashflows)
-    dpbt_result = compute_dpbt(pvi, cashflows, d)
 
+    # --- Cashflows for both perspectives ---
+    results_perspectives = {}
+    for perspective in ["project", "client"]:
+        cashflows = build_cashflow_series(
+            pvi, epvs, epvg, ps, pg, rps, rpg, rd, d, N, T, pvom, rom, source,
+            Xl, Xec, Xis, il, Nis, Nl, dec,
+            perspective=perspective
+        )
+        irr_result = compute_irr(cashflows)
+        dpbt_result = compute_dpbt(abs(cashflows[0]), cashflows, d)
+        results_perspectives[perspective] = {
+            "IRR (%)": round(irr_result * 100, 2) if irr_result is not None else None,
+            "DPBT (years)": dpbt_result if dpbt_result is not None else "Not recovered",
+        }
 
     return {
         "model": source,
-        "PVI (USD)": round(pvi, 3),
-        "EPV (kWh)": round(epv, 3),
-        "EPVs (kWh)": round(epvs, 3),
-        "EPVg (kWh)": round(epvg, 3),
-        "EPV discounted (kWh)": round(epv_discounted, 3),
+        #"PVI (USD)": round(pvi, 3),
+        #"EPV (kWh)": round(epv, 3),
+        #"EPVs (kWh)": round(epvs, 3),
+        #"EPVg (kWh)": round(epvg, 3),
+        #"EPV discounted (kWh)": round(epv_discounted, 3),
         "WACC (%)": round(wacc_result, 3),
-        "PWCO (USD)": round(pwco_result, 3),
-        "PWCI (USD)": round(pwci_result, 3),
+        #"PWCO (USD)": round(pwco_result, 3),
+        #"PWCI (USD)": round(pwci_result, 3),
         "LCOE (USD/kWh)": round(lcoe_result, 4),
         "NPV (USD)": round(npv_result, 3),
-        "IRR (%)": round(irr_result * 100, 2) if irr_result is not None else None,
-        "DPBT (years)": dpbt_result if dpbt_result is not None else "Not recovered",
-
-
+        "Project perspective": results_perspectives["project"],
+        "Client perspective": results_perspectives["client"],
     }
+
 
 def save_results_to_excel(city, scenario, parameters_dict, talavera_result, espinoza_result, save=True):
     if not save:

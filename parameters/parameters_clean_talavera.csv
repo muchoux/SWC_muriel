@@ -1,26 +1,26 @@
-parameter;definition;unity;talavera
-Cu;initial investment by kWp;USD/kWp;1250
-Hopt;global irradiation in optimum inclined plane (measured);Kwh/m2year;2040
-P;peak power;kWp;3.5
-PR;performance ratio;%;75
-rd;annual degredation rate;%;0.5
-El;annual household electricity consumption;kWh/year;5580
-N;life cycle;years;25
-SCI;self consumption index;%;60
-COM;anual operation and maintenance cost;% of PVi;1.5
-d;discount rate;%;6.02
-pg;price at which electricity is sold to the grid;USD/kWh;0
-ps;price at which electricity is self consumed;USD/kWh;0.1575
-rpg;annual escalation rate of pg;%;0
-rps;annual escalation rate of ps;%;1.45
-rom;annual escalation rate of opex;%;1.45
-T;income tax rate;%;0
-Nd;period of amortization of the investment for tax purposes;years;0
-Xd;total depreciation allowance;% of PVi;0
-Xl;part of PVi financed with loan;% of PVi;70
-Xec;part of PVi financed with equity capital;% of PVi;30
-Xis;part of PVi financed with subsidy or grant;% of PVi;0
-il;annual loan interest;%;5
-Nis;amortization of investment subsidy;years;0
-Nl;amortization of loan;years;20
-dec;annual dividend of the equity capital or return on equity;%;6
+parameter;definition;unity;talavera_1;talavera_2
+Cu;initial investment by kWp;USD/kWp;1250;2860
+Hopt;global irradiation in optimum inclined plane (measured);Kwh/m2year;2040;2095
+P;peak power;kWp;3.5;4
+PR;performance ratio;%;75;75
+rd;annual degredation rate;%;0.5;0.5
+El;annual household electricity consumption;kWh/year;5580;6019
+N;life cycle;years;25;25
+SCI;self consumption index;%;60;100
+COM;anual operation and maintenance cost;% of PVi;1.5;0.7
+d;discount rate;%;6.02;5.4
+pg;price at which electricity is sold to the grid;USD/kWh;0;0
+ps;price at which electricity is self consumed;USD/kWh;0.1575;0.16
+rpg;annual escalation rate of pg;%;0;0
+rps;annual escalation rate of ps;%;1.45;2.5
+rom;annual escalation rate of opex;%;1.45;2.5
+T;income tax rate;%;0;0
+Nd;period of amortization of the investment for tax purposes;years;0;0
+Xd;total depreciation allowance;% of PVi;0;0
+Xl;part of PVi financed with loan;% of PVi;70;70
+Xec;part of PVi financed with equity capital;% of PVi;30;30
+Xis;part of PVi financed with subsidy or grant;% of PVi;0;0
+il;annual loan interest;%;5;5
+Nis;amortization of investment subsidy;years;0;0
+Nl;amortization of loan;years;20;20
+dec;annual dividend of the equity capital or return on equity;%;6;6
