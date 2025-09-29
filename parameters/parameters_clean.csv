@@ -2,12 +2,12 @@ parameter;definition;unity;arequipa_1;arequipa_2;tacna_1;tacna_2;lima_1;lima_2
 Cu;initial investment by kWp;USD/kWp;2275.27;2667.67;2275.27;2667.67;2120.97;2486.37
 Hopt;global irradiation in optimum inclined plane (measured);Kwh/m2year;2220;2220;1859;1859;1477;1477
 P;peak power;kWp;3.3;3.3;3.3;3.3;3.456;3.456
-PR;performance ratio;%;85.5855855855856;85.5855855855856;84.7767616998386;84.7767616998386;88.2870683818551;88.2870683818551
+PR;performance ratio;%;85.58558559;85.58558559;84.7767617;84.7767617;88.28706838;88.28706838
 rd;annual degredation rate;%;0.5;0.5;0.5;0.5;0.5;0.5
 El;annual household electricity consumption;kWh/year;0;0;0;0;0;0
 N;life cycle;years;25;25;25;25;25;25
 SCI;self consumption index;%;100;100;100;100;100;100
-COM;anual operation and maintenance cost;% of PVi;0.835065728462996;0.712232022701459;0.835065728462996;0.712232022701459;1.03726125310589;0.884824060779369
+COM;anual operation and maintenance cost;% of PVi;0.835065728;0.712232023;0.835065728;0.712232023;1.037261253;0.884824061
 d;discount rate;%;12;9.72;12;9.72;12;9.72
 pg;price at which electricity is sold to the grid;USD/kWh;0;0;0;0;0;0
 ps;price at which electricity is self consumed;USD/kWh;0.1686;0.1686;0.1716;0.1716;0.1537;0.1537

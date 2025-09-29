@@ -8,13 +8,13 @@ import matplotlib.pyplot as plt
 
 # --- Select scenario and city ---
 # This section is the only one meant to be modified by the user.
-scenario = 2
-city = "talavera"
+scenario = "1"
+city = "lima"
 save_results = False #whether to save results to Excel or not
 
 # --- Import data ---
 # Load the CSV file containing parameters for different cities and scenarios.
-df = pd.read_csv("parameters/parameters_clean_talavera.csv", sep=";", decimal=",")
+df = pd.read_csv("parameters/parameters_clean.csv", sep=";", decimal=",")
 
 # Dynamically build the column name based on selected city and scenario.
 column_key = f"{city.lower()}_{scenario}"
