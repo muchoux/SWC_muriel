@@ -3,6 +3,9 @@ import numpy as np
 import pandas as pd
 from datetime import datetime
 import numpy_financial as npf
+import matplotlib.pyplot as plt
+
+# ajouter la possibilité de choisir le scenario, en ensuite d'enregistrer 
 
 # Import all functions from step_by_step.py except run_simulation
 from step_by_step import (
@@ -133,8 +136,74 @@ for sc in scenarios:
 # -----------------------------
 df_out = pd.DataFrame(all_results)
 timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
-filename = os.path.join(output_dir, f"sensitivity_{param_name}_{indicator}_talavera_{timestamp}.xlsx")
-df_out.to_excel(filename, index=False)
 
+
+# -----------------------------
+# PLOT DATA
+# -----------------------------
+
+correct_scenario = False
+chosen_scenario = "all"
+
+print("Choose a scenario")
+scenarios_to_choose_from = np.append(df_out["Scenario"].unique(), "all")
+
+for i,s in enumerate(scenarios_to_choose_from):
+    print(f"{i}. {s}")
+    
+choice = input("Choose the corresponding number : ")
+
+try:
+    choice_idx = int(choice)
+    if 0 <= choice_idx < len(scenarios_to_choose_from):
+        chosen_scenario = scenarios_to_choose_from[choice_idx]
+    else:
+        raise ValueError
+except ValueError:
+    print("Choix invalide, 'all' sera utilisé par défaut.")
+    chosen_scenario = "all"
+    
+print(f"✅ Scénario choisi : {chosen_scenario}")
+
+if chosen_scenario == "all":
+    for p in df_out["Scenario"].unique():
+        x_data = df_out.loc[df_out["Scenario"] == p][param_name].to_list()
+        y_data = df_out.loc[df_out["Scenario"] == p][indicator].to_list()
+        plt.plot(x_data, y_data, label=p)
+else:
+    x_data = df_out.loc[df_out["Scenario"] == chosen_scenario][param_name].to_list()
+    y_data = df_out.loc[df_out["Scenario"] == chosen_scenario][indicator].to_list()
+    plt.plot(x_data, y_data, label=chosen_scenario)
+        
+
+# Plot data
+plt.xlabel(param_name)
+plt.ylabel(indicator)
+plt.title(f"{indicator} vs {param_name} by Scenario")
+plt.legend(title="Scenario")
+plt.grid(True)
+# Invert y axis to get decreasing curve
+plt.gca().invert_yaxis()
+
+# Save under a folder thats named after the param_name, scenario, and indicator
+# Save both the excel and the graph
+save_dir_per_scenario = (
+    f"all_scenarios"
+    if chosen_scenario == "all"
+    else f"scenario_{chosen_scenario}"
+)
+
+os.makedirs(os.path.join(output_dir, save_dir_per_scenario), exist_ok=True)
+
+# Save excel
+excel_filename = os.path.join(os.path.join(output_dir, save_dir_per_scenario), f"sensitivity_{param_name}_{indicator}_talavera_{timestamp}.xlsx")
+data_to_save = df_out if chosen_scenario == "all" else df_out.loc[df_out["Scenario"] == chosen_scenario]
+data_to_save.to_excel(excel_filename, index=False)
+
+# Save png
+png_filename = os.path.join(os.path.join(output_dir, save_dir_per_scenario), f"sensitivity_{param_name}_{indicator}_talavera_{timestamp}.png")
+plt.savefig(png_filename)
+
+# Print ending
 print(f"\n✅ Sensitivity analysis (Talavera only) completed for {indicator} varying {param_name}.")
-print(f"Results saved to: {filename}")
+print(f"Results saved : excel to {excel_filename} and png to {png_filename}")
