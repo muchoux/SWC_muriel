@@ -4,6 +4,7 @@ import pandas as pd
 from datetime import datetime
 import numpy_financial as npf
 import matplotlib.pyplot as plt
+from matplotlib.ticker import MaxNLocator
 
 # ajouter la possibilité de choisir le scenario, en ensuite d'enregistrer 
 
@@ -165,25 +166,45 @@ except ValueError:
     
 print(f"✅ Scénario choisi : {chosen_scenario}")
 
-if chosen_scenario == "all":
-    for p in df_out["Scenario"].unique():
-        x_data = df_out.loc[df_out["Scenario"] == p][param_name].to_list()
-        y_data = df_out.loc[df_out["Scenario"] == p][indicator].to_list()
-        plt.plot(x_data, y_data, label=p)
-else:
-    x_data = df_out.loc[df_out["Scenario"] == chosen_scenario][param_name].to_list()
-    y_data = df_out.loc[df_out["Scenario"] == chosen_scenario][indicator].to_list()
-    plt.plot(x_data, y_data, label=chosen_scenario)
-        
+# Variables for case DPBT_project
+max_val = 0
+min_val = 0
+y_ticks = []
+not_recovered_val = 0
+plt.figure(figsize=(20, 15))
 
-# Plot data
+# Set up data for y axis 
+if indicator == "DPBT_project":
+    all_y_values = [y for y in df_out[indicator] if isinstance(y, (int, float))]
+    min_val = int(np.floor(min(all_y_values)))
+    max_val = int(np.ceil(max(all_y_values)))
+    y_ticks = ["Not Recovered"] + [str(y) for y in range(min_val, max_val + 1)]
+    not_recovered_val = max_val + 1  # value to replace Not recovered
+
+scenarios = df_out["Scenario"].unique() if chosen_scenario == "all" else [chosen_scenario]
+for scenario in scenarios:
+    df_s = df_out[df_out["Scenario"] == scenario]
+    x_data = df_s[param_name].tolist()
+
+    if indicator == "DPBT_project":
+        y_data = [y if isinstance(y, (int, float)) else not_recovered_val for y in df_s[indicator]]
+    else:
+        y_data = df_s[indicator].tolist()
+
+    plt.plot(x_data, y_data, label=scenario)
+
+# Labels and title
 plt.xlabel(param_name)
 plt.ylabel(indicator)
 plt.title(f"{indicator} vs {param_name} by Scenario")
-plt.legend(title="Scenario")
+plt.legend(title="Scenario", loc="upper left", bbox_to_anchor=(1,1)) 
 plt.grid(True)
-# Invert y axis to get decreasing curve
-plt.gca().invert_yaxis()
+
+# Ticks to have a proper y axis
+if indicator == "DPBT_project":
+    plt.yticks([not_recovered_val] + list(range(min_val, max_val + 1)), y_ticks)
+
+plt.tight_layout()
 
 # Save under a folder thats named after the param_name, scenario, and indicator
 # Save both the excel and the graph

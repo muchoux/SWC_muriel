@@ -269,15 +269,18 @@ def compute_irr(cashflows):
 
 def compute_dpbt(initial_investment, cashflows, d):
     """
-    Discounted Payback Time (years).
-    Number of years needed to recover the initial investment.
+    Discounted Payback Time (years, possibly fractional).
     """
     discounted_sum = 0
-    for year, cf in enumerate(cashflows[1:], start=1):  # exclude year 0
-        discounted_sum += cf / ((1 + d) ** year)
+    for year, cf in enumerate(cashflows[1:], start=1):
+        discounted_cf = cf / ((1 + d) ** year)
+        discounted_sum += discounted_cf
         if discounted_sum >= initial_investment:
-            return year
-    return None  # if never recovered
+            prev_sum = discounted_sum - discounted_cf
+            remaining = initial_investment - prev_sum
+            fraction = remaining / discounted_cf  # part of the year needed
+            return year - 1 + fraction
+    return None
 
 
 def run_simulation(source):
