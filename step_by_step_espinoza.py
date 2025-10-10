@@ -8,8 +8,8 @@ import matplotlib.pyplot as plt
 
 # --- Select scenario and city ---
 # This section is the only one meant to be modified by the user.
-scenario = "2"
-city = "tacna"
+scenario = "1"
+city = "lima"
 save_results = False #whether to save results to Excel or not
 
 # --- Import data ---
@@ -165,8 +165,8 @@ def PWCI(ps, pg, N, T, epvs, epvg, lcoe):
     Present Worth of Cash Inflows (PWCI) -- ESPINOZA LOGIC
     Calculates discounted revenue from self-consumed and grid-injected electricity.
     """
-    if scenario == "2":
-        return (ps * (1 - T) * epvs * Ks * (1 - Ks**N) / (1 - Ks))
+    if scenario == "1":
+        return (ps * (1 - T - 0.18) * epvs * Ks * (1 - Ks**N) / (1 - Ks))
     else:
         return (ps * epvs * Ks * (1 - Ks**N) / (1 - Ks)) + (pg * epvg * Kg * (1 - Kg**N) / (1 - Kg))
 
