@@ -6,8 +6,6 @@ import numpy_financial as npf
 import matplotlib.pyplot as plt
 from matplotlib.ticker import MaxNLocator
 
-# ajouter la possibilité de choisir le scenario, en ensuite d'enregistrer 
-
 # Import all functions from step_by_step.py except run_simulation
 from step_by_step import (
     EPV, EPVs, EPVg, PVI, PVOM, EPV_discounted,
@@ -33,7 +31,7 @@ output_dir = "sensitivity_analysis_results"
 os.makedirs(output_dir, exist_ok=True)
 
 # -----------------------------
-# SENSITIVITY LOOP (Talavera only)
+# SENSITIVITY LOOP
 # -----------------------------
 all_results = []
 
@@ -72,7 +70,7 @@ for sc in scenarios:
         Nl = int(current_params["Nl"])
         dec = float(current_params["dec"]) / 100
 
-        # --- Shared factors ---
+        # --- Shared factors (if needed later) ---
         q = 1 / (1 + d)
         Kp = (1 + rom) / (1 + d)
         Ks = (1 + rps) * (1 - rd) / (1 + d)
@@ -85,14 +83,14 @@ for sc in scenarios:
         epvg = EPVg(epv, SCI)
         pvom = PVOM(pvi, COM)
 
-        # --- Compute only the chosen indicator (Talavera) ---
+        # --- Compute only the chosen indicator (NO 'source' arg anymore) ---
         if indicator == "LCOE":
-            value_result = LCOE(pvi, Hopt, P, PR, rd, d, N, rom, pvom, T, Xd, Nd, "talavera")
+            value_result = LCOE(pvi, Hopt, P, PR, rd, d, N, rom, pvom, T, Xd, Nd)
         elif indicator == "NPV":
-            value_result = NPV(pvi, pvom, pg, ps, rpg, rps, rd, N, T, Nd, Xd, epvs, epvg, "talavera")
+            value_result = NPV(pvi, pvom, pg, ps, rpg, rps, rd, N, T, Nd, Xd, epvs, epvg)
         elif indicator == "IRR_project":
             cashflows_project = build_cashflow_series(
-                pvi, epvs, epvg, ps, pg, rps, rpg, rd, d, N, T, pvom, rom, "talavera",
+                pvi, epvs, epvg, ps, pg, rps, rpg, rd, d, N, T, pvom, rom,
                 Xl, Xec, Xis, il, Nis, Nl, dec,
                 perspective="project"
             )
@@ -100,7 +98,7 @@ for sc in scenarios:
             value_result = irr_proj * 100 if irr_proj is not None else None
         elif indicator == "DPBT_project":
             cashflows_project = build_cashflow_series(
-                pvi, epvs, epvg, ps, pg, rps, rpg, rd, d, N, T, pvom, rom, "talavera",
+                pvi, epvs, epvg, ps, pg, rps, rpg, rd, d, N, T, pvom, rom,
                 Xl, Xec, Xis, il, Nis, Nl, dec,
                 perspective="project"
             )
@@ -108,7 +106,7 @@ for sc in scenarios:
             value_result = dpbt_proj if dpbt_proj is not None else "Not recovered"
         elif indicator == "IRR_client":
             cashflows_client = build_cashflow_series(
-                pvi, epvs, epvg, ps, pg, rps, rpg, rd, d, N, T, pvom, rom, "talavera",
+                pvi, epvs, epvg, ps, pg, rps, rpg, rd, d, N, T, pvom, rom,
                 Xl, Xec, Xis, il, Nis, Nl, dec,
                 perspective="client"
             )
@@ -116,7 +114,7 @@ for sc in scenarios:
             value_result = irr_client * 100 if irr_client is not None else None
         elif indicator == "DPBT_client":
             cashflows_client = build_cashflow_series(
-                pvi, epvs, epvg, ps, pg, rps, rpg, rd, d, N, T, pvom, rom, "talavera",
+                pvi, epvs, epvg, ps, pg, rps, rpg, rd, d, N, T, pvom, rom,
                 Xl, Xec, Xis, il, Nis, Nl, dec,
                 perspective="client"
             )
@@ -138,20 +136,18 @@ for sc in scenarios:
 df_out = pd.DataFrame(all_results)
 timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
 
-
 # -----------------------------
 # PLOT DATA
 # -----------------------------
-
 correct_scenario = False
 chosen_scenario = "all"
 
 print("Choose a scenario")
 scenarios_to_choose_from = np.append(df_out["Scenario"].unique(), "all")
 
-for i,s in enumerate(scenarios_to_choose_from):
+for i, s in enumerate(scenarios_to_choose_from):
     print(f"{i}. {s}")
-    
+
 choice = input("Choose the corresponding number : ")
 
 try:
@@ -163,7 +159,7 @@ try:
 except ValueError:
     print("Choix invalide, 'all' sera utilisé par défaut.")
     chosen_scenario = "all"
-    
+
 print(f"✅ Scénario choisi : {chosen_scenario}")
 
 # Variables for case DPBT_project
@@ -173,16 +169,19 @@ y_ticks = []
 not_recovered_val = 0
 plt.figure(figsize=(20, 15))
 
-# Set up data for y axis 
+# Set up data for y axis
 if indicator == "DPBT_project":
     all_y_values = [y for y in df_out[indicator] if isinstance(y, (int, float))]
-    min_val = int(np.floor(min(all_y_values)))
-    max_val = int(np.ceil(max(all_y_values)))
+    if len(all_y_values) > 0:
+        min_val = int(np.floor(min(all_y_values)))
+        max_val = int(np.ceil(max(all_y_values)))
+    else:
+        min_val, max_val = 0, 1
     y_ticks = ["Not Recovered"] + [str(y) for y in range(min_val, max_val + 1)]
-    not_recovered_val = max_val + 1  # value to replace Not recovered
+    not_recovered_val = max_val + 1  # value to replace "Not recovered"
 
-scenarios = df_out["Scenario"].unique() if chosen_scenario == "all" else [chosen_scenario]
-for scenario in scenarios:
+scenarios_plot = df_out["Scenario"].unique() if chosen_scenario == "all" else [chosen_scenario]
+for scenario in scenarios_plot:
     df_s = df_out[df_out["Scenario"] == scenario]
     x_data = df_s[param_name].tolist()
 
@@ -197,7 +196,7 @@ for scenario in scenarios:
 plt.xlabel(param_name)
 plt.ylabel(indicator)
 plt.title(f"{indicator} vs {param_name} by Scenario")
-plt.legend(title="Scenario", loc="upper left", bbox_to_anchor=(1,1)) 
+plt.legend(title="Scenario", loc="upper left", bbox_to_anchor=(1, 1))
 plt.grid(True)
 
 # Ticks to have a proper y axis
@@ -217,14 +216,20 @@ save_dir_per_scenario = (
 os.makedirs(os.path.join(output_dir, save_dir_per_scenario), exist_ok=True)
 
 # Save excel
-excel_filename = os.path.join(os.path.join(output_dir, save_dir_per_scenario), f"sensitivity_{param_name}_{indicator}_talavera_{timestamp}.xlsx")
+excel_filename = os.path.join(
+    os.path.join(output_dir, save_dir_per_scenario),
+    f"sensitivity_{param_name}_{indicator}_noSource_{timestamp}.xlsx"
+)
 data_to_save = df_out if chosen_scenario == "all" else df_out.loc[df_out["Scenario"] == chosen_scenario]
 data_to_save.to_excel(excel_filename, index=False)
 
 # Save png
-png_filename = os.path.join(os.path.join(output_dir, save_dir_per_scenario), f"sensitivity_{param_name}_{indicator}_talavera_{timestamp}.png")
+png_filename = os.path.join(
+    os.path.join(output_dir, save_dir_per_scenario),
+    f"sensitivity_{param_name}_{indicator}_noSource_{timestamp}.png"
+)
 plt.savefig(png_filename)
 
 # Print ending
-print(f"\n✅ Sensitivity analysis (Talavera only) completed for {indicator} varying {param_name}.")
+print(f"\n✅ Sensitivity analysis completed for {indicator} varying {param_name}.")
 print(f"Results saved : excel to {excel_filename} and png to {png_filename}")
