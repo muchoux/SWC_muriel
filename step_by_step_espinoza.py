@@ -8,13 +8,13 @@ import matplotlib.pyplot as plt
 
 # --- Select scenario and city ---
 # This section is the only one meant to be modified by the user.
-scenario = "3"
-city = "talavera"
+scenario = "2"
+city = "tacna"
 save_results = False #whether to save results to Excel or not
 
 # --- Import data ---
 # Load the CSV file containing parameters for different cities and scenarios.
-df = pd.read_csv("parameters/parameters_clean_talavera.csv", sep=";", decimal=",")
+df = pd.read_csv("parameters/parameters_clean.csv", sep=";", decimal=",")
 
 # Dynamically build the column name based on selected city and scenario.
 column_key = f"{city.lower()}_{scenario}"
@@ -40,7 +40,7 @@ El = float(param_dict["El"])             # Annual household electricity consumpt
 N = int(param_dict["N"])                 # Lifetime of the project (years)
 SCI = float(param_dict["SCI"]) / 100     # Self-consumption index (%)
 Cu = float(param_dict["Cu"])             # Unit cost of the PV system (USD/kWp)
-COM = float(param_dict["COM"]) / 100     # opex cost as % of initial investment (%)
+COM = float(param_dict["COM"])           # opex cost as % of initial investment (%)
 d = float(param_dict["d"]) / 100         # Discount rate (%/year)
 pg = float(param_dict["pg"])             # Grid sale price (USD/kWh)
 ps = float(param_dict["ps"])             # Self-consumption electricity price (USD/kWh)
@@ -61,22 +61,33 @@ dec = float(param_dict["dec"]) / 100     # Annual return on equity (%/year)
 # --- WACC and discount rate ---
 def WACC(Xl, Xec, il, dec, T):
     """Weighted Average Cost of Capital (%)"""
-    # (no tax shield here)
-    wacc = ((Xec/(Xec+Xl)) * dec + (Xl/(Xec+Xl)) * il) * 100
+    # wacc = ((Xec/(Xec+Xl)) * dec + (Xl/(Xec+Xl)) * il * (1 - T)) * 100
+    wacc = ((Xec/(Xec+Xl)) * dec + (Xl/(Xec+Xl)) * il ) * 100
     return wacc
 
 wacc_result = WACC(Xl, Xec, il, dec, T)
 
+if scenario == "2":
+    d = wacc_result/100  # use WACC as discount rate if scenario 2
+    
 # --- Shared factors ---
 q = 1 / (1 + d)
 Kp = (1 + rom) / (1 + d)
 Ks = (1 + rps) * (1 - rd) / (1 + d)
+Ks_2 = (1 - rd) / (1 + d)
 Kg = (1 + rpg) * (1 - rd) / (1 + d)
+
 
 # --- Functions ---
 def EPV(Hopt, P, PR): 
     """Annual PV energy output without degradation (kWh/year)"""
-    Eyield = Hopt * PR  # kWh/kWp/year
+    # Eyield = Hopt * PR  # kWh/kWp/year
+    if city == "arequipa":
+        Eyield=1900                      # Annual Yield AREQUIPA (kWh/kWp/año)
+    elif city == "tacna":
+        Eyield=1576                      # Annual Yield TACNA (kWh/kWp/año)
+    elif city == "lima":
+        Eyield=1304                      # Annual Yield LIMA THINFILM (kWh/kWp/año)
     return P * Eyield
 
 def EPVs(epv, SCI): 
@@ -89,33 +100,76 @@ def EPVg(epv, SCI):
 
 def PVI(P, Cu): 
     """Initial investment cost (USD)"""
-    PVCOST = P * Cu
+    # PVCOST = P * Cu
+    if city == "arequipa" or city == "tacna":
+        if scenario=="1":
+            PVCOST_kw=2180                # CAPEX Arequipa/TAcna (USD$/Kwp instalado) SIN IVA
+        elif scenario=="2":
+            PVCOST_kw=2180*1.18          # CAPEX Arequipa/TAcna (USD$/Kwp instalado)
+           
+    elif city == "lima":
+        if scenario=="1":
+            PVCOST_kw=2030               # CAPEX ThinFilm Lima (USD$/Kwp instalado) SIN IVA
+        elif scenario=="2":
+            PVCOST_kw=2030*1.18          # CAPEX ThinFilm Lima (USD$/Kwp instalado)
+        
+    PVCOST=PVCOST_kw*P+102.27+151.52+60.61            # Initial investment of PV project(€)
     return PVCOST
 
-def PVOM(pvi, COM): 
+def PVOM(P, COM): 
     """Annual OPEX cost (USD/year)"""
-    return COM * pvi
+    return COM * P
 
 def PWCO(pvi, pvom, N, T, Xd, Nd, Xl, Xec, Xis, il, dec, Nis, Nl):
     """
-    Present Worth of Cash Outflows (USD) — Talavera logic
-    O&M after tax + initial investment – tax shield from depreciation.
+    Present Worth of Cash Outflows (USD) -- ESPINOZA LOGIC
+    Includes investment financing (loan, equity, subsidies), O&M costs, and depreciation.
     """
-    PWPVOM = pvom * (1 - T) * Kp * (1 - Kp**N) / (1 - Kp)
+    # Espinoza: O&M discounted (no (1-T) factor here)
+    PWPVOM = pvom * Kp * (1 - Kp**N) / (1 - Kp)
 
-    DEP = 0 if Nd == 0 else pvi * Xd / Nd
+    # Depreciation present worth
+    if Nd == 0:
+        DEP = 0
+    else:
+        DEP = pvi * Xd / Nd
     PWDEP = DEP * q * (1 - q ** Nd) / (1 - q)
 
-    pvinv = pvi
+    # Financing terms (Espinoza)
+    PVl = Xl * pvi
+    PVec = Xec * pvi
+    PVis = Xis * pvi
+
+    loan_term = 0
+    equity_term = 0
+    dividend_term = 0
+    subsidy_term = 0
+
+    if Xl > 0:
+        loan_annuity = (PVl * il * (1 - T)) / (1 - (1 + il * (1 - T)) ** (-Nl))
+        loan_term = loan_annuity * (q * (1 - q ** Nl)) / (1 - q)
+
+    if Xec > 0:
+        equity_term = dec * PVec * (q * (1 - q ** N)) / (1 - q)
+        dividend_term = PVec * (q ** N)
+
+    if Xis > 0 and Nis > 0:
+        subsidy_term = (PVis / Nis) * T * (q * (1 - q ** Nis)) / (1 - q)
+
+    pvinv = loan_term + equity_term + dividend_term + subsidy_term
+
     return pvinv + PWPVOM - PWDEP * T
 
-def PWCI(ps, pg, N, T, epvs, epvg):
+def PWCI(ps, pg, N, T, epvs, epvg, lcoe):
     """
-    Present Worth of Cash Inflows (PWCI) — Talavera logic
-    (self-consumption + grid sales), after income tax.
+    Present Worth of Cash Inflows (PWCI) -- ESPINOZA LOGIC
+    Calculates discounted revenue from self-consumed and grid-injected electricity.
     """
-    return (ps * epvs * (1 - T) * Ks * (1 - Ks**N) / (1 - Ks)) + \
-           (pg * epvg * (1 - T) * Kg * (1 - Kg**N) / (1 - Kg))
+    if scenario == "2":
+        return (ps * (1 - T) * epvs * Ks * (1 - Ks**N) / (1 - Ks))
+    else:
+        return (ps * epvs * Ks * (1 - Ks**N) / (1 - Ks)) + (pg * epvg * Kg * (1 - Kg**N) / (1 - Kg))
+
 
 def EPV_discounted(Hopt, P, PR, N, rd, d):
     """Total PV electricity generation over N years with degradation (kWh)"""
@@ -125,17 +179,20 @@ def EPV_discounted(Hopt, P, PR, N, rd, d):
     return result
 
 def LCOE(pvi, Hopt, P, PR, rd, d, N, rom, pvom, T, Xd, Nd):
-    """Levelized Cost of Electricity (USD/kWh) — Talavera"""
+    """Levelized Cost of Electricity (USD/kWh) -- ESPINOZA LOGIC"""
     epv_discounted = EPV_discounted(Hopt, P, PR, N, rd, d)
     pwco = PWCO(pvi, pvom, N, T, Xd, Nd, Xl, Xec, Xis, il, dec, Nis, Nl)
-    return pwco / epv_discounted
+    lcoe_result = pwco / epv_discounted
+    if scenario == "1":
+        lcoe_result *= (1 + 0.18 + 0.28)
+    return lcoe_result
 
-def NPV(pvi, pvom, pg, ps, rpg, rps, rd, N, T, Nd, Xd, epvs, epvg):
+def NPV(pvi, pvom, pg, ps, rpg, rps, rd, N, T, Nd, Xd, epvs, epvg, lcoe):
     """
-    Net Present Value of the project (USD) — Talavera
-    PWCI (after tax) – PWCO (with depreciation tax shield).
+    Net Present Value of the project (USD) -- ESPINOZA LOGIC
+    Difference between present value of cash inflows and outflows
     """
-    pwci = PWCI(ps, pg, N, T, epvs, epvg)
+    pwci = PWCI(ps, pg, N, T, epvs, epvg, lcoe)
     pwco = PWCO(pvi, pvom, N, T, Xd, Nd, Xl, Xec, Xis, il, dec, Nis, Nl)
     return pwci - pwco
 
@@ -191,8 +248,8 @@ def build_cashflow_series(
         infl_pg = pg * ((1 + rpg) ** (n))
 
         # Production dégradée (base = année 1)
-        energy_self = epvs * ((1 - rd) ** (n))
-        energy_grid = epvg * ((1 - rd) ** (n))
+        energy_self = epvs * ((1 - rd) ** (n - 1))
+        energy_grid = epvg * ((1 - rd) ** (n - 1))
 
         income = infl_ps * energy_self + infl_pg * energy_grid
 
@@ -228,10 +285,9 @@ def build_cashflow_series(
 
 def compute_irr(cashflows):
     """
-    IRR (décimal) calculé sur la série complète de flux (année 0 incluse).
+    Internal Rate of Return (IRR) based on full cashflow series (decimal).
     """
     return npf.irr(cashflows)
-
 
 
 def compute_dpbt(initial_investment, cashflows, d):
@@ -253,38 +309,18 @@ def run_simulation():
     epv = EPV(Hopt, P, PR)
     epvs = EPVs(epv, SCI)
     epvg = EPVg(epv, SCI)
-    pvom = PVOM(pvi, COM)
-
-    #     # ---------- DIAGNOSTIC ANNÉE 1 (Talavera / client) ----------
-    # PVl  = Xl  * pvi
-    # PVec = Xec * pvi
-    # annuity = PVl * il / (1 - (1 + il) ** (-Nl)) if (PVl > 0 and Nl > 0) else 0.0
-
-    # # année 1 = valeurs "base" (pas d’indexation ni dégradation → exposant 0)
-    # infl_ps_1 = ps
-    # infl_pg_1 = pg
-    # energy_self_1 = epvs
-    # energy_grid_1 = epvg
-    # income1 = infl_ps_1 * energy_self_1 + infl_pg_1 * energy_grid_1
-    # opex1   = pvom
-    # div1    = dec * PVec if PVec > 0 else 0.0
-    # net1_client = income1 - opex1 - annuity - div1
-
-    # print(f"Année 1 -> income={income1:.2f}, opex={opex1:.2f}, "
-    #       f"annuité={annuity:.2f}, dividende={div1:.2f}, "
-    #       f"net_client={net1_client:.2f}")
-    # # ------------------------------------------------------------
+    pvom = PVOM(P, COM)
  
-    # --- Economic indicators (Talavera) ---
+    # --- Economic indicators (legacy) ---
+    pvcost = pvi
     epv_discounted = EPV_discounted(Hopt, P, PR, N, rd, d)
     pwco_result = PWCO(pvi, pvom, N, T, Xd, Nd, Xl, Xec, Xis, il, dec, Nis, Nl)
-    pwci_result = PWCI(ps, pg, N, T, epvs, epvg)
     lcoe_result = LCOE(pvi, Hopt, P, PR, rd, d, N, rom, pvom, T, Xd, Nd)
-    npv_result = NPV(pvi, pvom, pg, ps, rpg, rps, rd, N, T, Nd, Xd, epvs, epvg)
+    pwci_result = PWCI(ps, pg, N, T, epvs, epvg, lcoe_result)
+    npv_result = NPV(pvi, pvom, pg, ps, rpg, rps, rd, N, T, Nd, Xd, epvs, epvg, lcoe_result)
 
     # --- Cashflows for both perspectives ---
     results_perspectives = {}
-    cashflows_by_perspective = {}
     for perspective in ["project", "client"]:
         cashflows = build_cashflow_series(
             pvi, epvs, epvg, ps, pg, rps, rpg, rd, d, N, T, pvom, rom,
@@ -297,64 +333,50 @@ def run_simulation():
             "IRR (%)": round(irr_result * 100, 2) if irr_result is not None else None,
             "DPBT (years)": dpbt_result if dpbt_result is not None else "Not recovered",
         }
-        cashflows_by_perspective[perspective] = cashflows
 
     return {
-        "model": "talavera",
-        # "PVI (USD)": round(pvi, 3),
-        # "EPV (kWh)": round(epv, 3),
-        # "EPVs (kWh)": round(epvs, 3),
-        # "EPVg (kWh)": round(epvg, 3),
-        # "EPV discounted (kWh)": round(epv_discounted, 3),
+        "model": "espinoza",
+        #"PVI (USD)": round(pvi, 3),
+        #"PVOM (USD/year)": round(pvom, 3),
+        #"EPV (kWh)": round(epv, 3),
+        #"EPVs (kWh)": round(epvs, 3),
+        #"EPVg (kWh)": round(epvg, 3),
+        #"EPV discounted (kWh)": round(epv_discounted, 3),
         "WACC (%)": round(wacc_result, 3),
-        # "PWCO (USD)": round(pwco_result, 3),
-        # "PWCI (USD)": round(pwci_result, 3),
+        "PWCO (USD)": round(pwco_result, 3),
+        "PWCI (USD)": round(pwci_result, 3),
         "LCOE (USD/kWh)": round(lcoe_result, 4),
         "NPV (USD)": round(npv_result, 3),
         "Project perspective": results_perspectives["project"],
         "Client perspective": results_perspectives["client"],
-        # "Cashflows": cashflows_by_perspective,
     }
 
 
-def save_results_to_excel(city, scenario, parameters_dict, talavera_result, save=True):
+def save_results_to_excel(city, scenario, parameters_dict, result, save=True):
     if not save:
         return
     timestamp = datetime.now().strftime("%d-%m-%Y_%H-%M")
     filename = f"results_{city.lower()}_{scenario}.xlsx"
     sheet_name = timestamp
     data = {
-        "Parameter": list(parameters_dict.keys()) + list(talavera_result.keys()),
-        "Value": list(parameters_dict.values()) + list(talavera_result.values())
+        "Parameter": list(parameters_dict.keys()) + list(result.keys()),
+        "Value": list(parameters_dict.values()) + list(result.values())
     }
     df_out = pd.DataFrame(data)
     with pd.ExcelWriter(filename, mode='a' if os.path.exists(filename) else 'w', engine='openpyxl') as writer:
         df_out.to_excel(writer, sheet_name=sheet_name, index=False)
 
+
 if __name__ == "__main__":
-    talavera_result = run_simulation()
-    df_results = pd.DataFrame([talavera_result])
-    print("\n--- TALAVERA MODEL ---")
+    result = run_simulation()
+    df_results = pd.DataFrame([result])
+    print("\n--- ESPINOZA MODEL ---")
     print(df_results)
-
-    # # ------- NEW: tableau des cashflows -------
-    # years = list(range(0, N + 1))
-    # flows_proj = talavera_result["Cashflows"]["project"]
-    # flows_cli  = talavera_result["Cashflows"]["client"]
-
-    # df_cf = pd.DataFrame({
-    #     "Year": years,
-    #     "Cashflow_project": flows_proj,
-    #     "Cashflow_client": flows_cli
-    # })
-
-    # print("\n--- CASHFLOWS (Project vs Client) ---")
-    # print(df_cf.to_string(index=False, float_format=lambda x: f"{x:,.2f}"))
 
     # save_results_to_excel(
     #     city=city,
     #     scenario=scenario,
     #     parameters_dict=param_dict,
-    #     talavera_result=talavera_result,
+    #     result=result,
     #     save=save_results
     # )

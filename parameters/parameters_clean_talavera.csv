@@ -1,4 +1,4 @@
-parameter;definition;unity;talavera_1;talavera_2
+parameter;definition;unity;talavera_3;talavera_4
 Cu;initial investment by kWp;USD/kWp;1250;2860
 Hopt;global irradiation in optimum inclined plane (measured);Kwh/m2year;2040;2095
 P;peak power;kWp;3.5;4
@@ -7,7 +7,7 @@ rd;annual degredation rate;%;0.5;0.5
 El;annual household electricity consumption;kWh/year;5580;6019
 N;life cycle;years;25;25
 SCI;self consumption index;%;60;100
-COM;anual operation and maintenance cost;% of PVi;1.5;0.7
+COM;anual operation and maintenance cost;USD/kWp;1.5;0.7
 d;discount rate;%;6.02;5.4
 pg;price at which electricity is sold to the grid;USD/kWh;0;0
 ps;price at which electricity is self consumed;USD/kWh;0.1575;0.16
