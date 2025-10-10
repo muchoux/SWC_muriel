@@ -143,7 +143,9 @@ correct_scenario = False
 chosen_scenario = "all"
 
 print("Choose a scenario")
-scenarios_to_choose_from = np.append(df_out["Scenario"].unique(), "all")
+cities = df_out["Scenario"].str.split("_").str[0].unique()
+scenarios_to_choose_from = np.append(df_out["Scenario"].unique(), cities)
+scenarios_to_choose_from = np.append("all",scenarios_to_choose_from)
 
 for i, s in enumerate(scenarios_to_choose_from):
     print(f"{i}. {s}")
@@ -162,12 +164,18 @@ except ValueError:
 
 print(f"✅ Scénario choisi : {chosen_scenario}")
 
+city_chosen = False # To have the ability to flag if we want a city or a city+techno
+
+if int(choice) >= (len(scenarios_to_choose_from) - len(cities)):
+    city_chosen = True
+
+
 # Variables for case DPBT_project
 max_val = 0
 min_val = 0
 y_ticks = []
 not_recovered_val = 0
-plt.figure(figsize=(20, 15))
+plt.figure(figsize=(12, 6))
 
 # Set up data for y axis
 if indicator == "DPBT_project":
@@ -181,6 +189,8 @@ if indicator == "DPBT_project":
     not_recovered_val = max_val + 1  # value to replace "Not recovered"
 
 scenarios_plot = df_out["Scenario"].unique() if chosen_scenario == "all" else [chosen_scenario]
+if city_chosen :
+    scenarios_plot = df_out[df_out["Scenario"].str.startswith(chosen_scenario)]["Scenario"].unique()
 for scenario in scenarios_plot:
     df_s = df_out[df_out["Scenario"] == scenario]
     x_data = df_s[param_name].tolist()
@@ -193,17 +203,23 @@ for scenario in scenarios_plot:
     plt.plot(x_data, y_data, label=scenario)
 
 # Labels and title
-plt.xlabel(param_name)
-plt.ylabel(indicator)
-plt.title(f"{indicator} vs {param_name} by Scenario")
-plt.legend(title="Scenario", loc="upper left", bbox_to_anchor=(1, 1))
+plt.xlabel(param_name, fontsize=16)
+plt.ylabel(indicator, fontsize=16)
+plt.title(f"{indicator} vs {param_name}")
+plt.legend(
+    title="Scenario",
+    title_fontsize=14,
+    fontsize=12,         
+    loc="upper right"
+)
 plt.grid(True)
 
 # Ticks to have a proper y axis
 if indicator == "DPBT_project":
     plt.yticks([not_recovered_val] + list(range(min_val, max_val + 1)), y_ticks)
+    plt.ylabel("DPBT")
+    plt.title(f"DPBT vs {param_name}", fontsize=20)
 
-plt.tight_layout()
 
 # Save under a folder thats named after the param_name, scenario, and indicator
 # Save both the excel and the graph
