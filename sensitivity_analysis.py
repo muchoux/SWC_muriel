@@ -3,6 +3,10 @@ import numpy as np
 import pandas as pd
 from datetime import datetime
 import numpy_financial as npf
+import matplotlib.pyplot as plt
+from matplotlib.ticker import MaxNLocator
+
+# ajouter la possibilité de choisir le scenario, en ensuite d'enregistrer 
 
 # Import all functions from step_by_step.py except run_simulation
 from step_by_step import (
@@ -133,8 +137,94 @@ for sc in scenarios:
 # -----------------------------
 df_out = pd.DataFrame(all_results)
 timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
-filename = os.path.join(output_dir, f"sensitivity_{param_name}_{indicator}_talavera_{timestamp}.xlsx")
-df_out.to_excel(filename, index=False)
 
+
+# -----------------------------
+# PLOT DATA
+# -----------------------------
+
+correct_scenario = False
+chosen_scenario = "all"
+
+print("Choose a scenario")
+scenarios_to_choose_from = np.append(df_out["Scenario"].unique(), "all")
+
+for i,s in enumerate(scenarios_to_choose_from):
+    print(f"{i}. {s}")
+    
+choice = input("Choose the corresponding number : ")
+
+try:
+    choice_idx = int(choice)
+    if 0 <= choice_idx < len(scenarios_to_choose_from):
+        chosen_scenario = scenarios_to_choose_from[choice_idx]
+    else:
+        raise ValueError
+except ValueError:
+    print("Choix invalide, 'all' sera utilisé par défaut.")
+    chosen_scenario = "all"
+    
+print(f"✅ Scénario choisi : {chosen_scenario}")
+
+# Variables for case DPBT_project
+max_val = 0
+min_val = 0
+y_ticks = []
+not_recovered_val = 0
+plt.figure(figsize=(20, 15))
+
+# Set up data for y axis 
+if indicator == "DPBT_project":
+    all_y_values = [y for y in df_out[indicator] if isinstance(y, (int, float))]
+    min_val = int(np.floor(min(all_y_values)))
+    max_val = int(np.ceil(max(all_y_values)))
+    y_ticks = ["Not Recovered"] + [str(y) for y in range(min_val, max_val + 1)]
+    not_recovered_val = max_val + 1  # value to replace Not recovered
+
+scenarios = df_out["Scenario"].unique() if chosen_scenario == "all" else [chosen_scenario]
+for scenario in scenarios:
+    df_s = df_out[df_out["Scenario"] == scenario]
+    x_data = df_s[param_name].tolist()
+
+    if indicator == "DPBT_project":
+        y_data = [y if isinstance(y, (int, float)) else not_recovered_val for y in df_s[indicator]]
+    else:
+        y_data = df_s[indicator].tolist()
+
+    plt.plot(x_data, y_data, label=scenario)
+
+# Labels and title
+plt.xlabel(param_name)
+plt.ylabel(indicator)
+plt.title(f"{indicator} vs {param_name} by Scenario")
+plt.legend(title="Scenario", loc="upper left", bbox_to_anchor=(1,1)) 
+plt.grid(True)
+
+# Ticks to have a proper y axis
+if indicator == "DPBT_project":
+    plt.yticks([not_recovered_val] + list(range(min_val, max_val + 1)), y_ticks)
+
+plt.tight_layout()
+
+# Save under a folder thats named after the param_name, scenario, and indicator
+# Save both the excel and the graph
+save_dir_per_scenario = (
+    f"all_scenarios"
+    if chosen_scenario == "all"
+    else f"scenario_{chosen_scenario}"
+)
+
+os.makedirs(os.path.join(output_dir, save_dir_per_scenario), exist_ok=True)
+
+# Save excel
+excel_filename = os.path.join(os.path.join(output_dir, save_dir_per_scenario), f"sensitivity_{param_name}_{indicator}_talavera_{timestamp}.xlsx")
+data_to_save = df_out if chosen_scenario == "all" else df_out.loc[df_out["Scenario"] == chosen_scenario]
+data_to_save.to_excel(excel_filename, index=False)
+
+# Save png
+png_filename = os.path.join(os.path.join(output_dir, save_dir_per_scenario), f"sensitivity_{param_name}_{indicator}_talavera_{timestamp}.png")
+plt.savefig(png_filename)
+
+# Print ending
 print(f"\n✅ Sensitivity analysis (Talavera only) completed for {indicator} varying {param_name}.")
-print(f"Results saved to: {filename}")
+print(f"Results saved : excel to {excel_filename} and png to {png_filename}")
