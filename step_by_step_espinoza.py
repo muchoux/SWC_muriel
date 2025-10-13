@@ -8,8 +8,9 @@ import matplotlib.pyplot as plt
 
 # --- Select scenario and city ---
 # This section is the only one meant to be modified by the user.
-scenario = "1"
-city = "lima"
+scenario = "2"
+leasing = "LCOE"  # only relevant if scenario 1; options: "LCOE" or "PS"
+city = "arequipa"
 save_results = False #whether to save results to Excel or not
 
 # --- Import data ---
@@ -74,7 +75,7 @@ if scenario == "2":
 q = 1 / (1 + d)
 Kp = (1 + rom) / (1 + d)
 Ks = (1 + rps) * (1 - rd) / (1 + d)
-Ks_2 = (1 - rd) / (1 + d)
+Ks_2 = (1 + rps) * (1 - rd)
 Kg = (1 + rpg) * (1 - rd) / (1 + d)
 
 
@@ -119,6 +120,13 @@ def PVI(P, Cu):
 def PVOM(P, COM): 
     """Annual OPEX cost (USD/year)"""
     return COM * P
+
+def EPV_discounted(Hopt, P, PR, N, rd, d):
+    """Total PV electricity generation over N years with degradation (kWh)"""
+    factor = (1 - rd) / (1 + d)
+    sum_factors = sum(factor ** i for i in range(1, N + 1))
+    result = EPV(Hopt, P, PR) * sum_factors
+    return result
 
 def PWCO(pvi, pvom, N, T, Xd, Nd, Xl, Xec, Xis, il, dec, Nis, Nl):
     """
@@ -166,39 +174,36 @@ def PWCI(ps, pg, N, T, epvs, epvg, lcoe):
     Calculates discounted revenue from self-consumed and grid-injected electricity.
     """
     if scenario == "1":
-        return (ps * (1 - T - 0.18) * epvs * Ks * (1 - Ks**N) / (1 - Ks))
-    else:
-        return (ps * epvs * Ks * (1 - Ks**N) / (1 - Ks)) + (pg * epvg * Kg * (1 - Kg**N) / (1 - Kg))
+        if leasing == "LCOE":
+            price = lcoe
+        else:
+            price = ps
+    elif scenario == "2":
+        price = ps
+    return (price * epvs * Ks_2 * (1 - Ks_2**(N-1)) / (1 - Ks_2))
 
-
-def EPV_discounted(Hopt, P, PR, N, rd, d):
-    """Total PV electricity generation over N years with degradation (kWh)"""
-    factor = (1 - rd) / (1 + d)
-    sum_factors = sum(factor ** i for i in range(1, N + 1))
-    result = EPV(Hopt, P, PR) * sum_factors
-    return result
 
 def LCOE(pvi, Hopt, P, PR, rd, d, N, rom, pvom, T, Xd, Nd):
     """Levelized Cost of Electricity (USD/kWh) -- ESPINOZA LOGIC"""
     epv_discounted = EPV_discounted(Hopt, P, PR, N, rd, d)
     pwco = PWCO(pvi, pvom, N, T, Xd, Nd, Xl, Xec, Xis, il, dec, Nis, Nl)
     lcoe_result = pwco / epv_discounted
-    if scenario == "1":
-        lcoe_result *= (1 + 0.18 + 0.28)
+    # if scenario == "1":
+    #     lcoe_result *= (1 + 0.18 + 0.28)
     return lcoe_result
 
-def NPV(pvi, pvom, pg, ps, rpg, rps, rd, N, T, Nd, Xd, epvs, epvg, lcoe):
-    """
-    Net Present Value of the project (USD) -- ESPINOZA LOGIC
-    Difference between present value of cash inflows and outflows
-    """
-    pwci = PWCI(ps, pg, N, T, epvs, epvg, lcoe)
-    pwco = PWCO(pvi, pvom, N, T, Xd, Nd, Xl, Xec, Xis, il, dec, Nis, Nl)
-    return pwci - pwco
+# def NPV(pvi, pvom, pg, ps, rpg, rps, rd, N, T, Nd, Xd, epvs, epvg, lcoe):
+#     """
+#     Net Present Value of the project (USD) -- ESPINOZA LOGIC
+#     Difference between present value of cash inflows and outflows
+#     """
+#     pwci = PWCI(ps, pg, N, T, epvs, epvg, lcoe)
+#     dep = pvi * Xd * T
+#     return pwci - pvi + dep
 
 def build_cashflow_series(
     pvi, epvs, epvg, ps, pg, rps, rpg, rd, d, N, T, pvom, rom,
-    Xl, Xec, Xis, il, Nis, Nl, dec,
+    Xl, Xec, Xis, il, Nis, Nl, dec,lcoe,
     perspective="project"
 ):
     """
@@ -228,52 +233,66 @@ def build_cashflow_series(
     PVec = Xec * pvi      # equity
     PVis = Xis * pvi      # subvention (si cash étalée, à ajouter si pertinent)
 
-    # --- Annuité de dette (taux nominal) ---
-    if PVl > 0 and Nl > 0:
-        loan_annuity = PVl * il / (1 - (1 + il) ** (-Nl))
-    else:
-        loan_annuity = 0.0
+    # # --- Annuité de dette (taux nominal) ---
+    # if PVl > 0 and Nl > 0:
+    #     loan_annuity = PVl * il / (1 - (1 + il) ** (-Nl))
+    # else:
+    #     loan_annuity = 0.0
 
     # --- Année 0 : investissement initial ---
     if perspective == "project":
         CF0 = -pvi
-    elif perspective == "client":
-        CF0 = -pvi * Xec
+    # elif perspective == "client":
+    #     CF0 = -pvi * Xec
     flows.append(CF0)
+
+    if scenario == "1":
+        if leasing == "LCOE":
+            price = lcoe
+        else:
+            price = ps
+    elif scenario == "2":
+        price = ps
 
     # --- Années 1..N ---
     for n in range(1, N + 1):
         # Prix électricité indexés (base = année 1)
-        infl_ps = ps * ((1 + rps) ** (n))
-        infl_pg = pg * ((1 + rpg) ** (n))
+        infl_ps = price * ((1 + rps) ** (n - 1))
+        # infl_pg = pg * ((1 + rpg) ** (n - 1))
 
         # Production dégradée (base = année 1)
         energy_self = epvs * ((1 - rd) ** (n - 1))
-        energy_grid = epvg * ((1 - rd) ** (n - 1))
+        # energy_grid = epvg * ((1 - rd) ** (n - 1))
 
-        income = infl_ps * energy_self + infl_pg * energy_grid
+        income = infl_ps * energy_self  # + infl_pg * energy_grid
 
         # O&M indexé (base = année 1)
-        opex = pvom * ((1 + rom) ** (n))
+        opex = pvom * ((1 + rom) ** (n - 1))
+
+        # Amortissement linéaire (base = année 1)
+        if Nd == 0:
+            depreciation = 0
+        else:
+            depreciation = T * (pvi * Xd / Nd) if n <= Nd else 0
 
         if perspective == "project":
             # IRR projet (non levier) : pas de dette, pas de dividendes
-            net = income - opex
+            net = income - opex + depreciation
 
-        elif perspective == "client":
-            # Logique Talavera (NCB exploité + financement)
-            debt_service = loan_annuity if (PVl > 0 and n <= Nl) else 0.0
-            dividend = dec * PVec if PVec > 0 else 0.0
+        # elif perspective == "client":
+        #     # Logique Talavera (NCB exploité + financement)
+        #     debt_service = loan_annuity if (PVl > 0 and n <= Nl) else 0.0
+        #     dividend = dec * PVec if PVec > 0 else 0.0
 
-            # Si la subvention est un cash effectivement perçu au fil de l'eau :
-            subsidy_term = (PVis / Nis) if (Xis > 0 and Nis > 0 and n <= Nis) else 0.0
-            # NB : dans l'exemple Madrid, typiquement Xis = 0 -> terme nul.
+        #     # Si la subvention est un cash effectivement perçu au fil de l'eau :
+        #     subsidy_term = (PVis / Nis) if (Xis > 0 and Nis > 0 and n <= Nis) else 0.0
+        #     # NB : dans l'exemple Madrid, typiquement Xis = 0 -> terme nul.
 
-            net = income - opex - debt_service - dividend + subsidy_term
+        #     net = income - opex - debt_service - dividend + subsidy_term
 
-            # Retrait du capital equity en dernière année (flux négatif)
-            if n == N and PVec > 0:
-                net -= PVec
+        #     # Retrait du capital equity en dernière année (flux négatif)
+        #     if n == N and PVec > 0:
+        #         net -= PVec
 
         else:
             raise ValueError("perspective must be 'project' or 'client'")
@@ -281,6 +300,12 @@ def build_cashflow_series(
         flows.append(net)
 
     return flows
+
+def NPV_cashflows(cashflows, d):
+    """
+    Net Present Value (NPV) based on full cashflow series (USD).
+    """
+    return npf.npv(d, cashflows)
 
 
 def compute_irr(cashflows):
@@ -290,93 +315,95 @@ def compute_irr(cashflows):
     return npf.irr(cashflows)
 
 
-def compute_dpbt(initial_investment, cashflows, d):
+def compute_dpbt(cashflows, d):
     """
     Discounted Payback Time (years).
     Number of years needed to recover the initial investment.
     """
-    discounted_sum = 0
-    for year, cf in enumerate(cashflows[1:], start=1):  # exclude year 0
-        discounted_sum += cf / ((1 + d) ** year)
-        if discounted_sum >= initial_investment:
-            return year
-    return None  # if never recovered
+     # t = 0
+    cum = cashflows[0]
+    if cum >= 0:
+        return 0.0
+
+    # t >= 1 (actualisation exponent (t-1))
+    for year, cf in enumerate(cashflows[1:], start=1):
+        prev_cum = cum
+        disc_cf = cf / ((1 + d) ** (year - 1))
+        cum += disc_cf
+        if cum >= 0:
+            # interpolation linéaire entre (year-1) et year
+            frac = abs(prev_cum) / disc_cf if disc_cf != 0 else 0.0
+            return (year - 1) + frac
+
+    return None
 
 
 def run_simulation():
     # --- Core project parameters ---
-    pvi = PVI(P, Cu)
-    epv = EPV(Hopt, P, PR)
+    pvi  = PVI(P, Cu)
+    epv  = EPV(Hopt, P, PR)
     epvs = EPVs(epv, SCI)
     epvg = EPVg(epv, SCI)
     pvom = PVOM(P, COM)
- 
-    # --- Economic indicators (legacy) ---
-    pvcost = pvi
-    epv_discounted = EPV_discounted(Hopt, P, PR, N, rd, d)
-    pwco_result = PWCO(pvi, pvom, N, T, Xd, Nd, Xl, Xec, Xis, il, dec, Nis, Nl)
+
+    # --- Calcul du LCOE (unique) ---
     lcoe_result = LCOE(pvi, Hopt, P, PR, rd, d, N, rom, pvom, T, Xd, Nd)
-    pwci_result = PWCI(ps, pg, N, T, epvs, epvg, lcoe_result)
-    npv_result = NPV(pvi, pvom, pg, ps, rpg, rps, rd, N, T, Nd, Xd, epvs, epvg, lcoe_result)
+    if scenario == "1":
+        lcoe_display = lcoe_result * (1 + 0.18 + 0.28)
+    else:
+        lcoe_display = lcoe_result
 
-    # --- Cashflows for both perspectives ---
-    results_perspectives = {}
-    for perspective in ["project", "client"]:
+    # --- Fonction interne de calcul pour un type de leasing ---
+    def _compute_for_leasing(leasing_type):
+        """Retourne un DataFrame des flux + indicateurs financiers."""
+        global leasing
+        leasing = leasing_type
+
         cashflows = build_cashflow_series(
-            pvi, epvs, epvg, ps, pg, rps, rpg, rd, d, N, T, pvom, rom,
-            Xl, Xec, Xis, il, Nis, Nl, dec,
-            perspective=perspective
+            pvi, epvs, epvg, ps, pg, rps, rpg, rd, d, N, T,
+            pvom, rom, Xl, Xec, Xis, il, Nis, Nl, dec, lcoe_result,
+            perspective="project"
         )
-        irr_result = compute_irr(cashflows)
-        dpbt_result = compute_dpbt(abs(cashflows[0]), cashflows, d)
-        results_perspectives[perspective] = {
-            "IRR (%)": round(irr_result * 100, 2) if irr_result is not None else None,
-            "DPBT (years)": dpbt_result if dpbt_result is not None else "Not recovered",
-        }
 
-    return {
-        "model": "espinoza",
-        #"PVI (USD)": round(pvi, 3),
-        #"PVOM (USD/year)": round(pvom, 3),
-        #"EPV (kWh)": round(epv, 3),
-        #"EPVs (kWh)": round(epvs, 3),
-        #"EPVg (kWh)": round(epvg, 3),
-        #"EPV discounted (kWh)": round(epv_discounted, 3),
-        "WACC (%)": round(wacc_result, 3),
-        "PWCO (USD)": round(pwco_result, 3),
-        "PWCI (USD)": round(pwci_result, 3),
-        "LCOE (USD/kWh)": round(lcoe_result, 4),
-        "NPV (USD)": round(npv_result, 3),
-        "Project perspective": results_perspectives["project"],
-        "Client perspective": results_perspectives["client"],
-    }
+        irr_val  = compute_irr(cashflows)
+        dpbt_val = compute_dpbt(cashflows, d)
+        npv_val  = NPV_cashflows(cashflows, d)
 
+        # Construire un DataFrame colonne
+        df = pd.DataFrame({
+            "Year": list(range(0, len(cashflows))),
+            "Cashflow (USD)": cashflows,
+        })
+        df["Leasing type"] = leasing_type
+        df["LCOE (USD/kWh)"] = round(lcoe_display, 4)
+        df["NPV (USD)"] = round(npv_val, 3) if npv_val is not None else None
+        df["IRR (%)"] = round(irr_val * 100, 2) if irr_val is not None else None
+        df["DPBT (years)"] = dpbt_val if dpbt_val is not None else "Not recovered"
 
-def save_results_to_excel(city, scenario, parameters_dict, result, save=True):
-    if not save:
-        return
-    timestamp = datetime.now().strftime("%d-%m-%Y_%H-%M")
-    filename = f"results_{city.lower()}_{scenario}.xlsx"
-    sheet_name = timestamp
-    data = {
-        "Parameter": list(parameters_dict.keys()) + list(result.keys()),
-        "Value": list(parameters_dict.values()) + list(result.values())
-    }
-    df_out = pd.DataFrame(data)
-    with pd.ExcelWriter(filename, mode='a' if os.path.exists(filename) else 'w', engine='openpyxl') as writer:
-        df_out.to_excel(writer, sheet_name=sheet_name, index=False)
+        # Placer les indicateurs sur la première ligne uniquement pour lisibilité
+        df.loc[1:, ["LCOE (USD/kWh)", "NPV (USD)", "IRR (%)", "DPBT (years)"]] = ""
 
+        return df
 
-if __name__ == "__main__":
-    result = run_simulation()
-    df_results = pd.DataFrame([result])
+    # --- Construction du résultat final ---
+    if scenario == "1":
+        df_lcoe = _compute_for_leasing("LCOE")
+        df_ps   = _compute_for_leasing("PS")
+        result_df = pd.concat([df_lcoe, df_ps], ignore_index=True)
+    else:
+        result_df = _compute_for_leasing("PS")
+
     print("\n--- ESPINOZA MODEL ---")
-    print(df_results)
+    print(result_df)
 
-    # save_results_to_excel(
-    #     city=city,
-    #     scenario=scenario,
-    #     parameters_dict=param_dict,
-    #     result=result,
-    #     save=save_results
-    # )
+    return result_df
+
+
+# --- Main ---
+if __name__ == "__main__":
+    df_results = run_simulation()
+
+    # Pour sauvegarder en Excel proprement (si tu veux)
+    # timestamp = datetime.now().strftime("%d-%m-%Y_%H-%M")
+    # filename = f"results_{city.lower()}_{scenario}.xlsx"
+    # df_results.to_excel(filename, index=False)
