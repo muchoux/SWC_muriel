@@ -4,24 +4,27 @@ import pandas as pd
 from datetime import datetime
 import numpy_financial as npf
 import matplotlib.pyplot as plt
-from matplotlib.ticker import MaxNLocator
 
-# Import all functions from step_by_step.py except run_simulation
-from step_by_step import (
+# Import all functions from final.py except run_simulation and from utils
+from final import (
     EPV, EPVs, EPVg, PVI, PVOM, EPV_discounted,
-    PWCO, PWCI, LCOE, NPV,
+    PWCO, PWCI, LCOE, NPV_cashflows,
     build_cashflow_series, compute_irr, compute_dpbt
 )
+
+from utils import get_metric_by_kwp_interval
 
 # -----------------------------
 # SETTINGS
 # -----------------------------
+scenario = "2"
 param_name = "SCI"       # <<< parameter to test (example: "Cu", "ps", "d", "SCI")
 param_values = np.linspace(0, 100, 101)  # <<< values to test for this parameter
 indicator = "DPBT_project"      # <<< Choose: "LCOE", "NPV", "IRR_project", "IRR_client", "DPBT_project", "DPBT_client"
 
 # Load parameter file
 df_params = pd.read_csv("parameters/rapport_2025.csv", sep=";", decimal=",")
+df_price = pd.read_excel("parameters/final_price.xlsx", header=[0,1])
 
 # Extract scenarios (all columns except 'parameter')
 scenarios = [col for col in df_params.columns if "_" in col]
@@ -69,6 +72,8 @@ for sc in scenarios:
         Nis = int(current_params["Nis"])
         Nl = int(current_params["Nl"])
         dec = float(current_params["dec"]) / 100
+        
+        ps = round(float(get_metric_by_kwp_interval(df_price, sc.split('_')[0], sc.split('_')[1], P)["value"]) / 1000)
 
         # --- Shared factors (if needed later) ---
         q = 1 / (1 + d)
@@ -82,43 +87,49 @@ for sc in scenarios:
         epvs = EPVs(epv, SCI)
         epvg = EPVg(epv, SCI)
         pvom = PVOM(pvi, COM)
+        lcoe_result = LCOE(pvi, Hopt, P, PR, rd, d, N, rom, pvom, T, Xd, Nd)
+        cashflows = build_cashflow_series(
+            pvi, epvs, epvg, ps, pg, rps, rpg, rd, d, N, T,
+            pvom, rom, Xl, Xec, Xis, il, Nis, Nl, dec, lcoe_result,
+            perspective="project"
+        )
 
         # --- Compute only the chosen indicator (NO 'source' arg anymore) ---
         if indicator == "LCOE":
             value_result = LCOE(pvi, Hopt, P, PR, rd, d, N, rom, pvom, T, Xd, Nd)
         elif indicator == "NPV":
-            value_result = NPV(pvi, pvom, pg, ps, rpg, rps, rd, N, T, Nd, Xd, epvs, epvg)
+            value_result = NPV_cashflows(cashflows, d)
         elif indicator == "IRR_project":
             cashflows_project = build_cashflow_series(
-                pvi, epvs, epvg, ps, pg, rps, rpg, rd, d, N, T, pvom, rom,
-                Xl, Xec, Xis, il, Nis, Nl, dec,
-                perspective="project"
-            )
+            pvi, epvs, epvg, ps, pg, rps, rpg, rd, d, N, T,
+            pvom, rom, Xl, Xec, Xis, il, Nis, Nl, dec, lcoe_result,
+            perspective="project"
+        )
             irr_proj = compute_irr(cashflows_project)
             value_result = irr_proj * 100 if irr_proj is not None else None
         elif indicator == "DPBT_project":
             cashflows_project = build_cashflow_series(
-                pvi, epvs, epvg, ps, pg, rps, rpg, rd, d, N, T, pvom, rom,
-                Xl, Xec, Xis, il, Nis, Nl, dec,
-                perspective="project"
-            )
-            dpbt_proj = compute_dpbt(abs(cashflows_project[0]), cashflows_project, d)
+            pvi, epvs, epvg, ps, pg, rps, rpg, rd, d, N, T,
+            pvom, rom, Xl, Xec, Xis, il, Nis, Nl, dec, lcoe_result,
+            perspective="project"
+        )
+            dpbt_proj = compute_dpbt(cashflows_project, d)
             value_result = dpbt_proj if dpbt_proj is not None else "Not recovered"
         elif indicator == "IRR_client":
             cashflows_client = build_cashflow_series(
-                pvi, epvs, epvg, ps, pg, rps, rpg, rd, d, N, T, pvom, rom,
-                Xl, Xec, Xis, il, Nis, Nl, dec,
-                perspective="client"
-            )
+            pvi, epvs, epvg, ps, pg, rps, rpg, rd, d, N, T,
+            pvom, rom, Xl, Xec, Xis, il, Nis, Nl, dec, lcoe_result,
+            perspective="project"
+        )
             irr_client = compute_irr(cashflows_client)
             value_result = irr_client * 100 if irr_client is not None else None
         elif indicator == "DPBT_client":
             cashflows_client = build_cashflow_series(
-                pvi, epvs, epvg, ps, pg, rps, rpg, rd, d, N, T, pvom, rom,
-                Xl, Xec, Xis, il, Nis, Nl, dec,
-                perspective="client"
-            )
-            dpbt_client = compute_dpbt(abs(cashflows_client[0]), cashflows_client, d)
+            pvi, epvs, epvg, ps, pg, rps, rpg, rd, d, N, T,
+            pvom, rom, Xl, Xec, Xis, il, Nis, Nl, dec, lcoe_result,
+            perspective="project"
+        )
+            dpbt_client = compute_dpbt(cashflows_client, d)
             value_result = dpbt_client if dpbt_client is not None else "Not recovered"
         else:
             raise ValueError(f"Unknown indicator: {indicator}")
