@@ -67,6 +67,8 @@ def WACC(Xl, Xec, il, dec, T):
 
 wacc_result = WACC(Xl, Xec, il, dec, T)
 
+# d = wacc_result/100  # use WACC as discount rate
+
 # --- Shared factors ---
 q = 1 / (1 + d)
 Kp = (1 + rom) / (1 + d)
@@ -96,6 +98,13 @@ def PVOM(pvi, COM):
     """Annual OPEX cost (USD/year)"""
     return COM * pvi
 
+def EPV_discounted(Hopt, P, PR, N, rd, d):
+    """Total PV electricity generation over N years with degradation (kWh)"""
+    factor = (1 - rd) / (1 + d)
+    sum_factors = sum(factor ** i for i in range(1, N + 1))
+    result = EPV(Hopt, P, PR) * sum_factors
+    return result
+
 def PWCO(pvi, pvom, N, T, Xd, Nd, Xl, Xec, Xis, il, dec, Nis, Nl):
     """
     Present Worth of Cash Outflows (USD) — Talavera logic
@@ -117,12 +126,6 @@ def PWCI(ps, pg, N, T, epvs, epvg):
     return (ps * epvs * (1 - T) * Ks * (1 - Ks**N) / (1 - Ks)) + \
            (pg * epvg * (1 - T) * Kg * (1 - Kg**N) / (1 - Kg))
 
-def EPV_discounted(Hopt, P, PR, N, rd, d):
-    """Total PV electricity generation over N years with degradation (kWh)"""
-    factor = (1 - rd) / (1 + d)
-    sum_factors = sum(factor ** i for i in range(1, N + 1))
-    result = EPV(Hopt, P, PR) * sum_factors
-    return result
 
 def LCOE(pvi, Hopt, P, PR, rd, d, N, rom, pvom, T, Xd, Nd):
     """Levelized Cost of Electricity (USD/kWh) — Talavera"""

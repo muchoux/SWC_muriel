@@ -41,7 +41,7 @@ El = float(param_dict["El"])             # Annual household electricity consumpt
 N = int(param_dict["N"])                 # Lifetime of the project (years)
 SCI = float(param_dict["SCI"]) / 100     # Self-consumption index (%)
 Cu = float(param_dict["Cu"])             # Unit cost of the PV system (USD/kWp)
-COM = float(param_dict["COM"])           # opex cost as % of initial investment (%)
+COM = float(param_dict["COM"]) / 100     # opex cost as % of initial investment (%)
 d = float(param_dict["d"]) / 100         # Discount rate (%/year)
 pg = float(param_dict["pg"])             # Grid sale price (USD/kWh)
 ps = float(param_dict["ps"])             # Self-consumption electricity price (USD/kWh)
@@ -84,13 +84,7 @@ Kg = (1 + rpg) * (1 - rd) / (1 + d)
 # --- Functions ---
 def EPV(Hopt, P, PR): 
     """Annual PV energy output without degradation (kWh/year)"""
-    # Eyield = Hopt * PR  # kWh/kWp/year
-    if city == "arequipa":
-        Eyield=1900                      # Annual Yield AREQUIPA (kWh/kWp/año)
-    elif city == "tacna":
-        Eyield=1576                      # Annual Yield TACNA (kWh/kWp/año)
-    elif city == "lima":
-        Eyield=1304                      # Annual Yield LIMA THINFILM (kWh/kWp/año)
+    Eyield = Hopt * PR  # kWh/kWp/year
     return P * Eyield
 
 def EPVs(epv, SCI): 
@@ -103,25 +97,12 @@ def EPVg(epv, SCI):
 
 def PVI(P, Cu): 
     """Initial investment cost (USD)"""
-    # PVCOST = P * Cu
-    if city == "arequipa" or city == "tacna":
-        if scenario=="1":
-            PVCOST_kw=2180                # CAPEX Arequipa/TAcna (USD$/Kwp instalado) SIN IVA
-        elif scenario=="2":
-            PVCOST_kw=2180*1.18          # CAPEX Arequipa/TAcna (USD$/Kwp instalado)
-           
-    elif city == "lima":
-        if scenario=="1":
-            PVCOST_kw=2030               # CAPEX ThinFilm Lima (USD$/Kwp instalado) SIN IVA
-        elif scenario=="2":
-            PVCOST_kw=2030*1.18          # CAPEX ThinFilm Lima (USD$/Kwp instalado)
-        
-    PVCOST=PVCOST_kw*P+102.27+151.52+60.61            # Initial investment of PV project(€)
+    PVCOST = P * Cu
     return PVCOST
 
-def PVOM(P, COM): 
+def PVOM(pvi, COM): 
     """Annual OPEX cost (USD/year)"""
-    return COM * P
+    return COM * pvi
 
 def EPV_discounted(Hopt, P, PR, N, rd, d):
     """Total PV electricity generation over N years with degradation (kWh)"""
