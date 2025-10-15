@@ -54,7 +54,6 @@ for sc in scenarios:
         El = float(current_params["El"])
         N = int(current_params["N"])
         SCI = float(current_params["SCI"]) / 100
-        Cu = float(current_params["Cu"])
         COM = float(current_params["COM"]) / 100
         d = float(current_params["d"]) / 100
         pg = float(current_params["pg"])
@@ -73,7 +72,7 @@ for sc in scenarios:
         Nl = int(current_params["Nl"])
         dec = float(current_params["dec"]) / 100
         
-        ps = round(float(get_metric_by_kwp_interval(df_price, sc.split('_')[0], sc.split('_')[1], P)["value"]) / 1000)
+        Cu = round(float(get_metric_by_kwp_interval(df_price, sc.split('_')[0], sc.split('_')[1], P)["value"]))
 
         # --- Shared factors (if needed later) ---
         q = 1 / (1 + d)
