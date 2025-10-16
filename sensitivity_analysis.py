@@ -239,6 +239,7 @@ print("Choose a scenario")
 cities = df_out["Scenario"].str.split("_").str[0].unique()
 techs = df_out["Scenario"].str.split("_").str[1].unique()
 scenarios_to_choose_from = np.append(techs, cities)
+scenarios_to_choose_from = np.append(df_out["Scenario"].unique(), scenarios_to_choose_from)
 scenarios_to_choose_from = np.append("all", scenarios_to_choose_from)
 
 for i, s in enumerate(scenarios_to_choose_from):
@@ -262,7 +263,7 @@ city_chosen = False  # vouloir tracer toutes les technos d'une ville
 tech_chosen = False
 if chosen_scenario != "all" and int(choice) >= (len(scenarios_to_choose_from) - len(cities)):
     city_chosen = True
-if chosen_scenario != "all" and int(choice) < (len(scenarios_to_choose_from) - len(cities)):
+if chosen_scenario != "all" and int(choice) < (len(scenarios_to_choose_from) - len(cities)) and int(choice) <= (len(scenarios_to_choose_from) - len(cities) - len(techs)):
     tech_chosen = True
 
 # --- Figure ---
@@ -288,7 +289,6 @@ if city_chosen:
     scenarios_plot = df_out[df_out["Scenario"].str.startswith(chosen_scenario)]["Scenario"].unique()
 if tech_chosen:
     scenarios_plot = df_out[df_out["Scenario"].str.endswith(chosen_scenario)]["Scenario"].unique()
-    print(scenarios_plot)
 
 for scenario_name in scenarios_plot:
     df_s = df_out[df_out["Scenario"] == scenario_name]
