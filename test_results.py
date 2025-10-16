@@ -10,7 +10,7 @@ import matplotlib.pyplot as plt
 # This section is the only one meant to be modified by the user.
 scenario = "perc"
 leasing = "LCOE"  # only relevant if scenario 1; options: "LCOE" or "PS"
-city = "lima"
+city = "arequipa"
 save_results = False #whether to save results to Excel or not
 
 # --- Import data ---
@@ -158,7 +158,7 @@ def PWCI(ps, pg, N, T, epvs, epvg, lcoe):
             price = lcoe
         else:
             price = ps
-    else:
+    elif scenario == "2":
         price = ps
     return (price * epvs * Ks_2 * (1 - Ks_2**(N-1)) / (1 - Ks_2))
 
@@ -376,12 +376,185 @@ def run_simulation():
 
     return result_df
 
+# --- Batch summary to CSV over all city_scenarios in the sheet ---
+def _set_globals_from_param_dict(param_dict, scenario_suffix):
+    """
+    Remplit les variables globales attendues par tes fonctions (LCOE, PWCO, PWCI, etc.)
+    à partir d'un param_dict et fixe 'scenario' (ex. 'perc' ou 'hit').
+    """
+    global scenario, leasing
+    global Hopt, P, PR, rd, El, N, SCI, Cu, COM, d, pg, ps, rpg, rps, rom, T, Nd, Xd
+    global Xl, Xec, Xis, il, Nis, Nl, dec
+    global q, Kp, Ks, Ks_2, Kg
 
-# --- Main ---
+    scenario = scenario_suffix  # ex: 'perc', 'hit' (ta logique PWCI tombera dans le cas 'else' = prix ps)
+
+    Hopt = float(param_dict["Hopt"])
+    P    = float(param_dict["P"])
+    PR   = float(param_dict["PR"]) / 100
+    rd   = float(param_dict["rd"]) / 100
+    El   = float(param_dict["El"])
+    N    = int(float(param_dict["N"]))
+    SCI  = float(param_dict["SCI"]) / 100
+    Cu   = float(param_dict["Cu"])
+    COM  = float(param_dict["COM"]) / 100
+    d    = float(param_dict["d"]) / 100
+    pg   = float(param_dict["pg"])
+    ps   = float(param_dict["ps"])
+    rpg  = float(param_dict["rpg"]) / 100
+    rps  = float(param_dict["rps"]) / 100
+    rom  = float(param_dict["rom"]) / 100
+    T    = float(param_dict["T"]) / 100
+    Nd   = int(float(param_dict["Nd"]))
+    Xd   = float(param_dict["Xd"]) / 100
+    Xl   = float(param_dict["Xl"]) / 100
+    Xec  = float(param_dict["Xec"]) / 100
+    Xis  = float(param_dict["Xis"]) / 100
+    il   = float(param_dict["il"]) / 100
+    Nis  = int(float(param_dict["Nis"]))
+    Nl   = int(float(param_dict["Nl"]))
+    dec  = float(param_dict["dec"]) / 100
+
+    # WACC -> d si tu veux l'utiliser pour un scénario spécifique (dans ton code: scenario == "2")
+    wacc_result = WACC(Xl, Xec, il, dec, T)
+    if scenario == "2":
+        # Rare pour tes suffixes 'perc'/'hit', mais on respecte ta logique
+        # d devient WACC (décimal)
+        # (wacc_result est en %, ton d est en décimal)
+        d = wacc_result / 100.0
+
+    # Partagés
+    q    = 1 / (1 + d)
+    Kp   = (1 + rom) / (1 + d)
+    Ks   = (1 + rps) * (1 - rd) / (1 + d)
+    Ks_2 = (1 + rps) * (1 - rd)
+    Kg   = (1 + rpg) * (1 - rd) / (1 + d)
+
+    # Choix par défaut, éventuellement écrasé lors du calcul
+    leasing = "PS"
+
+
+def _compute_metrics_for_column(df_params, column_key):
+    """
+    Calcule (paramètres + indicateurs) pour une colonne du type 'arequipa_perc' et
+    renvoie une liste de lignes (dicos) pour le DataFrame final.
+    """
+    rows = []
+
+    # Paramètres bruts pour cette combinaison
+    param_dict_raw = dict(zip(df_params["parameter"], df_params[column_key]))
+
+    # On garde en parallèle une version 'affichable' des paramètres (convertis)
+    # pour les poser tels quels dans le CSV final
+    # (on réutilise la même conversion que celle de ton script)
+    _set_globals_from_param_dict(param_dict_raw, scenario_suffix=column_key.rsplit("_", 1)[-1])
+
+    # --- Calculs de base ---
+    pvi  = PVI(P, Cu)
+    epv  = EPV(Hopt, P, PR)
+    epvs = EPVs(epv, SCI)
+    epvg = EPVg(epv, SCI)
+    pvom = PVOM(pvi, COM)        # ⟵ attention: PVOM prend bien pvi, pas P
+
+    lcoe_result = LCOE(pvi, Hopt, P, PR, rd, d, N, rom, pvom, T, Xd, Nd)
+    # Affichage LCOE (ta règle spéciale pour scenario == "1")
+    if scenario == "1":
+        lcoe_display = lcoe_result * (1 + 0.18 + 0.28)
+    else:
+        lcoe_display = lcoe_result
+
+    city = column_key.rsplit("_", 1)[0]
+    scen = column_key.rsplit("_", 1)[-1]
+
+    # Leasing à calculer (dans ton code, "1" -> 2 leasing; sinon un seul)
+    leasing_types = ["LCOE", "PS"] if scenario == "1" else ["PS"]
+
+    for leasing_type in leasing_types:
+        # fixe la variable globale utilisée par tes fonctions
+        globals()["leasing"] = leasing_type
+
+        cashflows = build_cashflow_series(
+            pvi, epvs, epvg, ps, pg, rps, rpg, rd, d, N, T,
+            pvom, rom, Xl, Xec, Xis, il, Nis, Nl, dec, lcoe_result,
+            perspective="project"
+        )
+        irr_val  = compute_irr(cashflows)
+        dpbt_val = compute_dpbt(cashflows, d)
+        npv_val  = NPV_cashflows(cashflows, d)
+
+        # Ligne résultat + TOUS les paramètres (convertis)
+        row = {
+            "city": city,
+            "scenario": scen,
+            "leasing": leasing_type,
+            "LCOE_USD_per_kWh": round(lcoe_display, 6),
+            "NPV_USD": round(float(npv_val), 3) if npv_val is not None else None,
+            "IRR_%": round(float(irr_val) * 100, 3) if irr_val is not None else None,
+            "DPBT_years": dpbt_val if dpbt_val is not None else None,
+
+            # Paramètres (version convertie utilisée dans les calculs)
+            "Hopt_kWhm2y": Hopt,
+            "P_kWp": P,
+            "PR_frac": PR,
+            "rd_frac": rd,
+            "El_kWh_y": El,
+            "N_years": N,
+            "SCI_frac": SCI,
+            "Cu_USD_kWp": Cu,
+            "COM_frac": COM,
+            "d_disc_frac": d,
+            "pg_USD_kWh": pg,
+            "ps_USD_kWh": ps,
+            "rpg_frac": rpg,
+            "rps_frac": rps,
+            "rom_frac": rom,
+            "T_tax_frac": T,
+            "Nd_years": Nd,
+            "Xd_frac": Xd,
+            "Xl_frac": Xl,
+            "Xec_frac": Xec,
+            "Xis_frac": Xis,
+            "il_frac": il,
+            "Nis_years": Nis,
+            "Nl_years": Nl,
+            "dec_frac": dec,
+            "PVI_USD": pvi,
+            "EPV_kWh_y": epv,
+            "EPVs_kWh_y": epvs,
+            "EPVg_kWh_y": epvg,
+            "PVOM_USD_y1": pvom,
+        }
+        rows.append(row)
+
+    return rows
+
+
+def generate_summary_csv(
+    input_csv_path="parameters/rapport_2025.csv",
+    output_csv_path="summary_results_all_scenarios_2025.csv",
+    sep=";", decimal=","
+):
+    """
+    Parcourt toutes les colonnes {ville}_{scenario} et produit un CSV
+    avec tous les paramètres + indicateurs (LCOE, NPV, IRR, DPBT).
+    """
+    df_params = pd.read_csv(input_csv_path, sep=sep, decimal=decimal)
+    scenario_cols = [c for c in df_params.columns if c != "parameter" and "_" in c]
+
+    all_rows = []
+    for col in scenario_cols:
+        all_rows.extend(_compute_metrics_for_column(df_params, col))
+
+    summary_df = pd.DataFrame(all_rows)
+
+    # Tri optionnel pour lisibilité
+    summary_df = summary_df.sort_values(by=["city", "scenario", "leasing"]).reset_index(drop=True)
+
+    summary_df.to_csv(output_csv_path, index=False)
+    print(f"\n✅ Résumé écrit dans: {output_csv_path}\n")
+    return summary_df
+
+
+# Exemple d'utilisation (décommente pour lancer directement) :
 if __name__ == "__main__":
-    df_results = run_simulation()
-
-    # Pour sauvegarder en Excel proprement (si tu veux)
-    # timestamp = datetime.now().strftime("%d-%m-%Y_%H-%M")
-    # filename = f"results_{city.lower()}_{scenario}.xlsx"
-    # df_results.to_excel(filename, index=False)
+    generate_summary_csv()
